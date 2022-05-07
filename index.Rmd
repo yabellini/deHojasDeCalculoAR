@@ -1,5 +1,5 @@
 ---
-title: "Welcome!"
+title: "Bienvenides"
 ---
 
 ### What is this course about?
@@ -30,7 +30,7 @@ This is a tentative time table.
 |20  | [Reporting your work](05-reports.html) |
 |10 | Q&A and goodbye |
 
-### Who are we? 
+### ¿Quienes somos? 
 
 **Yanina Bellini Saibene**
 
@@ -52,21 +52,21 @@ Yanina Bellini Saibene, MS. She is a tenured researcher at the National Institut
 
 ___
 
-#### License
+#### Licencia
 
 <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
 All materials in this course are under the license <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
-We are inspired and based on the following resources:
+Nos inspiramos y nos basamos en los siguientes recursos:
 
-* [R for Reproducible Scientific Analysis](https://swcarpentry.github.io/r-novice-gapminder/) by The Carpentries
+* [R for Reproducible Scientific Analysis](https://swcarpentry.github.io/r-novice-gapminder/) por The Carpentries
 
-* [R for Excel Users](https://rstudio-conf-2020.github.io/r-for-excel/) by Dr. Julie Stewart Lowndes and Dr. Allison Horst
+* [R for Excel Users](https://rstudio-conf-2020.github.io/r-for-excel/) por Dr. Julie Stewart Lowndes and Dr. Allison Horst
 
-* [R for Data Science](https://r4ds.had.co.nz/) by Hadley Wickham
+* [R for Data Science](https://r4ds.had.co.nz/) por Hadley Wickham
 
-* [de Excel a R](https://paocorrales.github.io/deExcelaR/) by Paola Corrales and Elio Campitelli
+* [de Excel a R](https://paocorrales.github.io/deExcelaR/) por Paola Corrales and Elio Campitelli
 
-* [An Antarctic Tour of the Tidyverse](https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/) by Silvia Canelón
+* [An Antarctic Tour of the Tidyverse](https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/) por Silvia Canelón
 
-The source code for these materials and web page can be found at https://github.com/yabellini/fromSpreadSheetToR.
+El código fuente de estos materiales y la página web pueden encontrarse en https://github.com/yabellini/deHojasDeCalculoAR.
