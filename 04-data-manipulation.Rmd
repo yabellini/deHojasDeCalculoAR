@@ -1,5 +1,5 @@
 ---
-title: "Data manipulation"
+title: "Manipulando datos"
 output: 
   html_document:
     code_download: true

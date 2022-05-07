@@ -1,5 +1,5 @@
 ---
-title: "Reporting your work"
+title: "Informes de tu trabajo"
 output: 
   html_document:
     code_download: true
@@ -15,7 +15,7 @@ chunk <- "```"
 ```
 
 
-The first example report we saw was rendered into an html file. But what about Word or PDF files, which can be more usefull or expected in some situations?. RMarkdown, and a whole ecosystem of other packages, allows you to generate documents in multiple formats using the same plain text file.
+The first example report we saw was rendered into an html file. But what about Word or PDF files, which can be more useful or expected in some situations?. RMarkdown, and a whole ecosystem of other packages, allows you to generate documents in multiple formats using the same plain text file.
 
 The way you generate the output file format is by changing the `output` option on the header.
 
