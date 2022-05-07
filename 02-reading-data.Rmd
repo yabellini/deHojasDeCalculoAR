@@ -1,0 +1,59 @@
+---
+title: "Reading data"
+output: 
+  html_document:
+    code_download: true
+    toc: true
+    toc_float: false
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About palmerpenguins
+
+It's time to present the data set we are using. The **Palmer Penguins** data were collected and made available by Dr. Kristen Gorman and the [Palmer Station, Antarctica LTER](https://pal.lternet.edu/), a member of the Long Term Ecological Research Network. The data set includes several characteristics from Adelie, Chinstrap and Gentoo penguins. You can read more about it on the [palmerpenguins Documentation](https://allisonhorst.github.io/palmerpenguins/). 
+
+These data are available in R by installing the palmerpenguins package, but because we want to learn how to read data into R, we are gonig to read them from csv and xls files.
+
+## Reading csv files
+
+We'll start by loading the **tidyverse** package, which gives us access to dozens of functions to work with. For know we'll use the `read_csv()` function to read a csv file that is stored in the data directory. 
+
+```{r}
+library(tidyverse)
+
+penguins <- read_csv("data/penguins.csv")
+```
+
+In Excel or Google Sheets, data are stored in the spreadsheet and organized in cells. In R, they are stored in objects. When we read a csv file, the data goes directly to the `penguins` data frame and it's ready to be used. In the Environment panel we can see the `penguins` object, if we click that object the data will open in a new tab fro us to take a look. 
+
+<img src="img/view_in_rstudio.png" alt="RStudio tab with penguin data after View() function is call" />
+
+This view is the most similar to the one we have in a spreadsheet. We can get to this panel by running `View(penguins)` on the console  There are several other function to look at our data.  Let's use one of them
+
+```{r}
+glimpse(penguins)
+```
+
+This output is different and give us information about the type of data in each column (or variable).
+
+Sometimes our data is not so friendly and we need to give more information to the function to be able to read the data properly. You can find these options by looking into the function's documentation. 
+
+> Go ahead and write `?read_csv()` on the console. What is the name of the option to change the default delimitator?
+
+## Reading xls files
+
+What about xls files? For that we'll need differnet R package, **readxl** that is already installed on the RStudio Cloud project. In this case the function is called `read_excel()`
+
+```{r}
+library(readxl)
+
+penguins_xls <- read_excel("data/penguins.xlsx")
+```
+
+And that's it, we've read an xls file. Of course, we sometimes have to work with files with multiple sheets or data that is no very organised. This functions comes with several options or arguments to read specific sheets (`sheet = <name of the sheet>`) or a specific range (`range = "C1:E7"`) and others. 
+
+Now that we have the data read into R, it's time to do some analysis. 
