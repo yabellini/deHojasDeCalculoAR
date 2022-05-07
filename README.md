@@ -1,3 +1,7 @@
+# de Hojas de Cálculo a R
+Yanina Bellini Saibene, Paola Corrales y Elio Campitelli
+
+
 # fromSpreadSheetToR
 
 Yanina Bellini Saibene, Paola Corrales y Elio Campitelli
