@@ -1,5 +1,5 @@
 ---
-title: "Gentoo Penguins"
+title: "Pingüinos Papua"
 output: html_document
 ---
 
@@ -12,7 +12,7 @@ library(tidyverse)
 library(readxl)
 ```
 
-## About the data
+## Sobre los datos
 
 The **Palmer Penguins** data were collected and made available by Dr. Kristen Gorman and the [Palmer Station, Antarctica LTER](https://pal.lternet.edu/), a member of the Long Term Ecological Research Network. The data set includes several characteristics from Adelie, Chinstrap and Gentoo penguins. 
 
@@ -50,7 +50,7 @@ penguins %>%
        color = "Penguin species") 
 ```
 
-Female and male penguins have differnet body mass. Male penguins generally are bigger than females. 
+Las hembras y los machos de los pingüinos tienen una masa corporal diferente. Los pingüinos macho suelen ser más grandes que las hembras. 
 
 ```{r}
 penguins %>% 

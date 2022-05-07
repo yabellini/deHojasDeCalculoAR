@@ -19,7 +19,7 @@ library(tidyverse)
 penguins <- read_csv("data/penguins.csv")
 ```
 
-## Creating summary tables
+## Creando tablas de resumen
 
 In spreadsheet, pivot tables or dynamic tables are powerful tools for summarizing data in different ways. We can create these tables using the `group_by` and `summarize` functions from the tidyverse package. 
 
