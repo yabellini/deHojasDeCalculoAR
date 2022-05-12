@@ -2,33 +2,33 @@
 title: "Bienvenides"
 ---
 
-### What is this course about?
+### De que se trata este curso?
 
-This course is intended for [people](personas.html) who use spreadsheets for data manipulation and have never programmed, but would like to learn how to work with R. Therefore its starts from the beginning: why use R? and where to start?
+Este curso está dirigido a [personas](personas.html) que utilizan hojas de cálculo para la manipulación de datos y que nunca han programado, pero que les gustaría aprender a trabajar con R. Por lo tanto, comenzamos por el principio: ¿por qué usar R? y ¿por dónde empezar?
 
-We propose to work with R in an orderly and reproducible way. For this reason, we present a workflow that allows those who take this course to apply good programming practices, work collaboratively and present their work in a single document that includes the analysis and the results.
+Proponemos trabajar con R de forma ordenada y reproducible. Por ello, presentamos un flujo de trabajo que permite a quienes realicen este curso aplicar buenas prácticas de programación, trabajar de forma colaborativa y presentar su trabajo en un único documento que incluya el análisis y los resultados.
 
-Whenever we can, we will mention how what we propose to solve with R can also be done with spreadsheets and the advantages and disadvantages of each approach.
+Siempre que podamos, mencionaremos cómo lo que proponemos resolver con R también se puede hacer con hojas de cálculo y las ventajas y desventajas de cada enfoque.
 
-In each section we include activities along with examples. We want these exercises to be realistic so that anyone can find similarities in their own data and can apply what they have learned to other situations.
+En cada sección incluimos actividades junto con ejemplos. Queremos que estos ejercicios sean realistas para que cualquiera pueda encontrar similitudes en sus propios datos y pueda aplicar lo aprendido a otras situaciones.
 
-### Before we start
+### Antes de comenzar
 
-During this workshop we will use RStudio Cloud.  If you want to use your computer we will use R and RStudio. Please [follow these instructions to prepare for the workshop](prepare.html).
+Durante este taller utilizaremos RStudio Cloud. Si quieres trabajar localmente en tu computadora usaremos R y RStudio. Por favor, [sigue estas instrucciones para prepararte antes del taller](prepare.html).
 
-### Schedule
+### Agenda
 
-This is a tentative time table. 
+Este es un cronograma tentativo. 
 
-|Duration (minutes) |Topics|
+|Duración (minutos) |Temas|
 |:---|----------|
-|55  | [Introduction, reports, workflows](01-introduction.html) |
-|5   | Break |
-|55  | [Reading](02-reading-data.html) and [Plotting](03-plotting-data.html) |
-|5   | Break |
-|30  | [Data manipulation](04-data-manipulation.html) |
-|20  | [Reporting your work](05-reports.html) |
-|10 | Q&A and goodbye |
+|55  | [Introduccion, reportes, flujo de trabajo](01-introduction.html) |
+|5   | Pausa |
+|55  | [Leyendo](02-reading-data.html) y [Graficando](03-plotting-data.html) datos |
+|5   | Pausa |
+|30  | [Manipulación de datos](04-data-manipulation.html) |
+|20  | [Comunicando tu trabajo](05-reports.html) |
+|10 | Preguntas y cierre |
 
 ### ¿Quienes somos? 
 
@@ -36,26 +36,26 @@ This is a tentative time table.
 
 <img src="img/yani_circle.png" alt="Foto de Yani" width="100" height="100" align="left" style="margin:10px"/>
 
-Yanina Bellini Saibene, MS. She is a tenured researcher at the National Institute of Agricultural Technology (INTA, Argentina). She applies computer and data science skills to bring technological developments to rural and underserved regions of Argentina. She coordinates the National Network of Agroecosystem Modeling at INTA. She also develops software to support research and education. She is a professor at undergraduate and graduate levels in several universities in Argentina and Uruguay, teaching applied Data Science and developed open courses and tutorials to teach technical skills in data management. She is a trainer and instructor for [The Carpentries](https://carpentries.org/) and an [RStudio](https://education.rstudio.com/trainers/people/bellini_saibene+yanina/) certified instructor. She has trained teachers since 1996 through the Federal Network of Continuous Teacher Training (National Ministry of Education, Argentina). She is co-founder and a Core Team member of [MetaDocencia](http://metadocencia.org/). She is part of the R-Ladies Global team, chair of several international conferences (user! 2021, LatinR, JAIIO), and an international keynote speaker. She also leads and participates in community translation of educational and technical material into Spanish, like Teaching Tech Together, R4DS, and The Carpentries Lessons. 
+Yanina Bellini Saibene. Es investigadora titular en el Instituto Nacional de Tecnología Agropecuaria (INTA, Argentina). Aplica sus conocimientos de informática y ciencia de datos para llevar los desarrollos tecnológicos a las regiones rurales y desatendidas de Argentina. Coordina la Red Nacional de Modelización de Agroecosistemas en el INTA. También desarrolla software para apoyar la investigación y la educación. Es profesora de grado y posgrado en varias universidades de Argentina y Uruguay, enseñando Ciencia de Datos aplicada y desarrollando cursos abiertos y tutoriales para enseñar habilidades técnicas en el manejo de datos. Es formadora e instructora de [Las Carpinterías](https://carpentries.org/) e instructora certificada de [RStudio](https://education.rstudio.com/trainers/people/bellini_saibene+yanina/). Ha formado a profesores desde 1996 a través de la Red Federal de Formación Docente Continua (Ministerio de Educación de la Nación, Argentina). Es cofundadora y miembro del core team de [MetaDocencia](http://metadocencia.org/). Forma parte del equipo de R-Ladies Global, preside varias conferencias internacionales (user! 2021, LatinR, JAIIO) y es conferenciante internacional. También lidera y participa en la traducción comunitaria de material educativo y técnico al español, como Teaching Tech Together, R4DS, y The Carpentries Lessons. 
 
 [yabellini.netlify.com](https://yabellini.netlify.com/)
 
 **Pao Corrales**
 
-<img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Paola Corrales, MS. She is a Ph.D. student at the University of Buenos Aires. She studies atmospheric sciences applying data assimilation techniques to improve short-term forecasts of severe events in Argentina. She is a trainer and instructor for [The Carpentries](https://carpentries.org/) and an [RStudio](https://education.rstudio.com/trainers/people/corrales+paola/) certified instructor. She has also contributed to translations projects of Carpentries’ materials and the book Teaching Tech Together. She is part of Expedition Science, an Argentina-based NPO, where she leads educational projects such as science camps and workshops for students and K-12 science teachers. She is also on Expedition Science Board since 2013 and serves as its treasurer. She is a teacher assistant at the Atmosphere and Oceans Sciences at Buenos Aires University and a professor at the Data Sciences degree and postgraduate courses at Guillermo Brown University.  She is co-founder and a Core Team member of [MetaDocencia](http://metadocencia.org/). She also develops openly licensed materials to teach and learn R from scratch. 
+<img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Paola Corrales. Es estudiante de doctorado en la Universidad de Buenos Aires. Estudia ciencias de la atmósfera aplicando técnicas de asimilación de datos para mejorar los pronósticos a corto plazo de eventos severos en Argentina. Es trainer e instructora de [Las Carpinterías](https://carpentries.org/) e instructora certificada de [RStudio](https://education.rstudio.com/trainers/people/corrales+paola/). También ha contribuido a proyectos de traducción de materiales de The Carpentries y al libro Teaching Tech Together. Forma parte de Expedición Ciencia, una organización sin ánimo de lucro con sede en Argentina, donde dirige proyectos educativos como campamentos y talleres de ciencia para estudiantes y profesores de ciencias de primaria y secundaria. Es profesora de la Licenciatura y la diplomatura en Ciencias de Datos de la Universidad Guillermo Brown.  Es cofundadora de [MetaDocencia](http://metadocencia.org/). También desarrolla materiales de licencia abierta para enseñar y aprender R desde cero. 
 
 [paobcorrales.github.io](https://github.com/paocorrales) | [\@paobcorrales](https://twitter.com/PaobCorrales)
 
-<img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/> Yani and Pao are part of MetaDocencia, a non-profit organization that nurtures a community of Spanish-speaking educators by teaching concrete, evidence-based, and student-centered educational methods. MetaDocencia collaboratively develops open, reusable, and accessible resources to foster effective training practices.
+<img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/> Yani y Pao forman parte de MetaDocencia, una organización sin fines de lucro que nutre a una comunidad de educadores y educadoras de habla hispana mediante la enseñanza de métodos educativos concretos, basados en la evidencia y centrados en los y las estudiantes. MetaDocencia desarrolla en colaboración recursos abiertos, reutilizables y accesibles para fomentar prácticas de formación eficaces.
 
-[MetaDocencia.org](https://www.metadocencia.org/en/)
+[MetaDocencia.org](https://www.metadocencia.org/)
 
 ___
 
 #### Licencia
 
 <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-All materials in this course are under the license <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+Todos los materiales de este curso en encuentra bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
 Nos inspiramos y nos basamos en los siguientes recursos:
 
@@ -65,7 +65,7 @@ Nos inspiramos y nos basamos en los siguientes recursos:
 
 * [R for Data Science](https://r4ds.had.co.nz/) por Hadley Wickham
 
-* [de Excel a R](https://paocorrales.github.io/deExcelaR/) por Paola Corrales and Elio Campitelli
+* [de Excel a R](https://paocorrales.github.io/deExcelaR/) por Paola Corrales y Elio Campitelli
 
 * [An Antarctic Tour of the Tidyverse](https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/) por Silvia Canelón
 

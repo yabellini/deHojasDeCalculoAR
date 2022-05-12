@@ -1,25 +1,25 @@
 navbar:
-  title: "From Spreadsheet to R"
+  title: "De hojas de cálculo a R"
   left: 
-    - text: Before we start
+    - text: Antes de comenzar
       href: prepare.html
-    - text: Topics
+    - text: Temas
       menu: 
-        - text: Introduction and Reports
+        - text: Introducción y reportes
           href: 01-introduction.html
-        - text: Reading Data
+        - text: Leyendo datos
           href: 02-reading-data.html
-        - text: Plotting Data
+        - text: Graficando datos
           href: 03-plotting-data.html
-        - text: Data manipulation
+        - text: Maninpulación de datos
           href: 04-data-manipulation.html
-        - text: Reporting your work
+        - text: Comunicando nuestro trabajo
           href: 05-reports.html
-    - text: Example
+    - text: Ejemplo
       href: penguins_report.html
   right:
     - text: Repo
-      href: https://github.com/yabellini/fromSpreadSheetToR
+      href: https://github.com/yabellini/deHojasDeCalculoAR
 output_dir: "docs"
 output:
   html_document:
