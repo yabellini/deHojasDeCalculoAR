@@ -16,7 +16,7 @@ navbar:
         - text: Comunicando nuestro trabajo
           href: 05-reports.html
     - text: Ejemplo
-      href: penguins_report.html
+      href: reporte_pinguinos.html
   right:
     - text: Repo
       href: https://github.com/yabellini/deHojasDeCalculoAR

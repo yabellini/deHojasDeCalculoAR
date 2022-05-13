@@ -16,102 +16,102 @@ knitr::opts_chunk$set(
 )
 
 library(tidyverse)
-penguins <- read_csv("data/penguins.csv")
+pinguinos <- read_csv("datos/pinguinos.csv")
 ```
 
 ## Creando tablas de resumen
 
-In spreadsheet, pivot tables or dynamic tables are powerful tools for summarizing data in different ways. We can create these tables using the `group_by` and `summarize` functions from the tidyverse package. 
+En una hoja de cálculo, las tablas dinámicas o pivot tables son potentes herramientas para resumir los datos de diferentes maneras. Podemos crear estas tablas utilizando las funciones `group_by` y `summarize` del paquete dplyr. 
 
-Let's take a look at our report, right after we read the data, we create a summary table with the number of cases and the average body mass for each specie in our dataset.
+Echemos un vistazo a nuestro informe, justo después de leer los datos, creamos una tabla de resumen con el número de casos y la masa corporal media de cada especie de nuestro conjunto de datos.
 
-We can use `group_by()` to group our data by **species** and `summarize()` to calculate the number of cases and the average **body_mass_g** for each grouping.
+Podemos utilizar `group_by()` para agrupar nuestros datos por **especie** y `summarize()` para calcular el número de casos y la **masa_corporal_g** media para cada grupo.
 
 ```{r}
 
-penguins %>% 
-  group_by(species) %>% 
+pinguinos %>% 
+  group_by(especie) %>% 
   summarise(count = n(),
-            mean_body_mass = mean(body_mass_g, na.rm = TRUE))
+            masa_corporal_media = mean(masa_corporal_g, na.rm = TRUE))
 
 ```
 
-The function `n()` returns the number of cases and the function `mean` computes the average. The parameter `na.rm = TRUE` tells the function to remove non available values (`NA`) before performing the calculation.
+La función `n()` devuelve el número de casos y la función `mean` calcula la media o promedio. El parámetro `na.rm = TRUE` indica a la función que elimine los valores faltantes (`NA`) antes de realizar el cálculo.
 
-> Question: What if you don’t use `group_by()` before `summarise()`? Let’s try it and discuss what’s going on.
+> Pregunta: ¿Qué pasa si no se utiliza `group_by()` antes de `summarise()`? Probémoslo y discutamos lo que ocurre.
 
 ```{r}
-penguins %>% 
+pinguinos %>% 
   summarise(count = n(),
-            mean_body_mass = mean(body_mass_g, na.rm = TRUE))
+            masa_corporal_media = mean(masa_corporal_g, na.rm = TRUE))
 ```
 
-So if we don't group_by first, we will get a single summary statistic (n and mean in this case) for the whole dataset.
+Así que si no agrupamos por la especie primero, obtendremos una sola estadística de resumen (n y media en este caso) para todo el conjunto de datos.
 
-Now, we want the average of the body mass in kilograms and with two decimals. We can change our `summarise()` call to get that calculation.  
+Ahora, queremos la media de la masa corporal en kilogramos y con dos decimales. Podemos cambiar nuestra llamada a `summarise()` para obtener ese cálculo.  
 
 ```{r}
-penguins %>% 
-  group_by(species) %>% 
+pinguinos %>% 
+  group_by(especie) %>% 
   summarise(count = n(),
-            mean_body_mass = round(mean(body_mass_g/1000, na.rm = TRUE), 2))
+            masa_corporal_media = round(mean(masa_corporal_g/1000, na.rm = TRUE), 2))
 ```
 
-First we divide body mass by 1000 to transform from grams to kilograms and then we use the function `round()` to get only two decimals.
+Primero dividimos la masa corporal por 1000 para transformarla de gramos a kilogramos y luego utilizamos la función `round()` para redondear a sólo dos decimales.
 
-Now we are at the point where we actually want to save this summary information as a variable so we can use it in further analyses and formatting.
+Ahora estamos en el punto en el que queremos guardar esta información resumida como una variable para poder utilizarla en posteriores análisis y formatos.
 
-So let's add a variable assignment to that first line:
+Así que vamos a añadir una asignación de variable a esa primera línea:
 
 ```{r}
-summary <- penguins %>% 
-  group_by(species) %>% 
+resumen <- pinguinos %>% 
+  group_by(especie) %>% 
   summarise(count = n(),
-            mean_body_mass = round(mean(body_mass_g/1000, na.rm = TRUE), 2))
+            masa_corporal_media = round(mean(masa_corporal_g/1000, na.rm = TRUE), 2))
 ```
 
-## Formatig the table
+## Dándole formato a la tabla
 
-To make our table look better in a report, we have to change some of its elements. For example, the name of the variables should be informative for a person (at the moment they are useful names for a computer), and we can add a title to it and change the alignment of the numbers.
+Para que nuestra tabla se vea mejor en un informe, tenemos que cambiar algunos de sus elementos. Por ejemplo, el nombre de las variables debe ser informativo para una persona (de momento son nombres útiles para una computadora), y podemos añadirle un título y cambiar la alineación de los números.
 
-We can do that with the `kable` function.
+Podemos hacerlo con la función `kable`.
 
 ```{r}
-summary %>% 
-  knitr::kable(col.names = c("Specie", "Count", "Mean Body Mass"),
+resumen %>% 
+  knitr::kable(col.names = c("Especie", "Cantidad", "Masa corporal media"),
                align = "lcc",
-               caption = "Summary of penguins on the data set by specie.")
+               caption = "Resumen de los pingüinos en el dataset por especie.")
 ```
 
-We can do a lot more with other functions (or "verbs") of the tidyverse. Let's see a couple more
+Podemos hacer mucho más con otras funciones (o "verbos") de dplyr. Veamos algunos más.
 
-## Creating new variables
+## Creando nuevas variables
 
-There are a lot of times in which we want to operate beyond the original data. This is often done by adding a column. We do this with the `mutate()` function.
+Muchas veces querremos trabajar con información que se deriva de los datos originales. Esto se suele hacer añadiendo una nueva columna. Lo hacemos con la función `mutate()`.
 
-We can add a new variable (called `prop`) representing the proportion of penguins in each **species** with by using `mutate()`. 
+Podemos añadir una nueva variable (llamada `prop`) que represente la proporción de pingüinos en cada **especie** con el uso de `mutate()`. 
 
 ```{r}
-penguins %>% 
-  group_by(species) %>% 
+pinguinos %>% 
+  group_by(especie) %>% 
   summarise(count = n(),
-            mean_body_mass = round(mean(body_mass_g/1000, na.rm = TRUE), 2)) %>%
-  mutate(prop = count/nrow(penguins))
+            masa_corporal_media = round(mean(masa_corporal_g/1000, na.rm = TRUE), 2)) %>%
+  mutate(prop = count/nrow(pinguinos))
 
 ```
 
-## Filtering data
+## Filtrando los datos
 
-In our report we also make plot by species. To do this we need to keep only the data of the species we want to analyse.  We use the `filter()` function to filter data frames, this function returns a new data frame with only the rows that satisfy some conditions.
+En nuestro informe también realizamos un gráfico por especies. Para ello necesitamos mantener sólo los datos de la especie que queremos analizar.  Utilizamos la función `filter()` para filtrar filas de un data.frame, esta función devuelve un nuevo data.frame con sólo las filas que satisfacen algunas condiciones.
 
-We can use logical operators (`>`, `<`, `>=`, `<=`, `==`) to create conditions from numeric variables  These operators are also useful for dates and text strings. Look at the code to see a condition for text type of data.
+Podemos utilizar operadores lógicos (`>`, `<`, `>=`, `<=`, `==`) para crear condiciones a partir de variables numéricas. Estos operadores también son útiles para fechas y cadenas de texto. El siguiente código aplica una condición (que sea igual a) para datos de tipo texto (la columna especie).
 
 ```{r}
-penguins %>% 
-  filter(species == "Gentoo")
+pinguinos %>% 
+  filter(especie == "Papúa")
 ```
 
-> Activity: Write code to filter all the penguins in the Torgersen island.
+> Actividad: Escribe el código necesario para filtrar todos los pingüinos de la isla Torgersen.
 
-> Activity: Now write the code to filter all the penguins with flipper lenght greater than 200
+> Actividad: Ahora escribe el código para filtrar todos los pingüinos con longitud de aleta mayor a 200.
 

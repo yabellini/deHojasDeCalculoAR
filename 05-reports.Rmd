@@ -62,39 +62,39 @@ Para generar un informe parametrizado hay que añadir un elemento llamado `param
 
 ```yaml
 params:
-  species: Papua
+  especie: Papúa
 ```
 
 ```{r, include=FALSE}
-params <- list(species = "Papua")
+params <- list(especie = "Papúa")
 ```
 
 A partir de ahora, tendrás acceso a una variable llamada `params` que es una lista que contiene los parámetros y su valor. Para acceder al valor de cada parámetro se utiliza el operador `$` de la siguiente manera:
 
 ```{r}
-params$species
+params$especie
 ```
 
-De este modo, el código original puede modificarse para utilizar el valor de la especie almacenada en `params$species`.
+De este modo, el código original puede modificarse para utilizar el valor de la especie almacenada en `params$especie`.
 
 ```{r eval=FALSE}
-penguins %>% 
-  filter(species == params$species) %>% 
-  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+pinguinos %>% 
+  filter(especie == params$especie) %>% 
+  ggplot(aes(x = largo_pico_mm, y = alto_pico_mm)) +
   geom_point(color = "darkorange",
              size = 3,
              alpha = 0.8) +
   geom_smooth(method = "lm", se = FALSE, color = "darkorange") +
   theme_minimal() +
   labs(title = "Dimensiones del pingüino",
-       subtitle = paste("Longitud y profundidad para los pingüinos", params$specie, "en Palmer Station LTER"),
-       x = "Longitud (mm)",
-       y = "Profundidad (mm)",
+       subtitle = paste("Longitud y profundidad para los pingüinos", params$especie, "en Palmer Station LTER"),
+       x = "Largo del pico (mm)",
+       y = "Alto del pico (mm)",
        color = "Especie de Pingüino") 
 ```
 
-Aquí cambiamos el subtítulo para concatenar palabras con el valor almacenado en `params$species`, de esta manera podemos construir el subtítulo de forma progamática.
+Aquí cambiamos el subtítulo para concatenar palabras con el valor almacenado en `params$especie`, de esta manera podemos construir el subtítulo de forma progamática.
 
 Ahora el informe está listo para funcionar como un informe parametrizado.
 
-> Por último, cambia "Papua" en el yaml para generar un nuevo informe para una de las otras especies. 
+> Por último, cambia "Papúa" en el yaml para generar un nuevo informe para una de las otras especies. 

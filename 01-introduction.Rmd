@@ -18,7 +18,7 @@ Si lo que necesitás son reportes frecuentes y automáticos, y análisis de dato
 
 ## ¿Cómo vamos a trabajar?
 
-Vamos a usar R como lenguaje de programación y RStudio como una IDE (Integrated Development Environment), un Entorno Integrado de Desarrollo. Si no los tenés instalado en tu computadora, no te preocupes, tenemos este  [proyecto en RStudio Cloud](https://rstudio.cloud/project/3174865) para que puedas trabajar.
+Vamos a usar R como lenguaje de programación y RStudio como una IDE (Integrated Development Environment), un Entorno Integrado de Desarrollo. Si no los tenés instalado en tu computadora, no te preocupes, tenemos este  [proyecto en RStudio Cloud](https://rstudio.cloud/project/4046044) para que puedas trabajar.
 
 Para iniciar RStudio, hacé doble click en el ícono de RStudio. Iniciar  RStudio también inicia R (en realidad, es probable que nunca abras R por sí mismo).
 

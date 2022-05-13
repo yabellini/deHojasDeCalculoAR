@@ -1,33 +1,38 @@
 ---
-title: "Before we start"
+title: "Antes de comenzar"
+output:
+  html_document:
+    toc: false
 ---
 
-To participate on the workshop you can either install R (>4.0) and Rstudio (see instructions bellow) or use an instance of R at RStudio Cloud.
+Para participar en este taller puedes instalar R (>4.0) y Rstudio (revisa las instrucción más abajo) o usar una instancia de R en RStudio Cloud.
 
-#### Using RStudio Cloud
+#### Usando RStudio Cloud
 
-If you want to use RStudio Cloud you will need a free account. Go to [rstudio.cloud/](https://rstudio.cloud/) and follow de instructions to register. Keep in mind that the free account is limited to 15 hours per month and you don't want to use it all before the workshop.
+Si quieres usar RStudio Cloud necesitarás una cuenta gratuita. Ingresa a [rstudio.cloud/](https://rstudio.cloud/) y sigue las instrucciones para registrarte. Ten en cuenta que la cuenta gratuita tiene un límite de uso de 15 horas por mes, te recomendamos no usar todas las horas antes del taller.
 
-We'll provide a link to a pre-configured RStudio project during the workshop. You don't have to do anything else. 
+Durante el taller compartiremos un link a un proyecto de RStudio listo para usar. No es necesario que hagas nada más. 
 
-#### Installing R and RStudio
+#### Instalando R y RStudio
 
-To install R and RStudio follow the instructions in [these videos](https://www.youtube.com/playlist?list=PLRPB0ZzEYegOZivdelOuEn-R-XUN-DOjd) by [Danielle Navarro](https://djnavarro.net/).
+Para instalar R y RStudio sigue las instrucciones en [estos videos](https://www.youtube.com/playlist?list=PLRPB0ZzEYegOZivdelOuEn-R-XUN-DOjd) de [Danielle Navarro](https://djnavarro.net/).
 
-After you have everything installed, you'll need to install a few packages required for the workshop. Follow these instructions:
+Después instalar todo, tendrás que instalar algunos paquetes necesarios para el taller. Sigue estas instrucciones:
 
-1. Open RStudio
-2. On the console (the panel on the left) type the following commands
+1. Abre RStudio
+2. En la consola (el panel de la izquierda) escriba los siguientes comandos:
 
 ```{r, eval=FALSE}
 install.packages("tidyverse")
-install.packages("palmerpenguins")
+install.packages("datos")
 ```
 
-4. Go to File -> New File -> R Markdown. Click on "Ok" to create a new file. RStudio will ask your permission to install several packages. Go ahead and do it. 
+4. Haz click en Archivo -> Nuevo Archivo -> R Markdown. Haz clic en "Ok" para crear un nuevo archivo. 
 
-5. You can remove the file you just created.
+5. RStudio te pedirá permiso para instalar varios paquetes. Adelante, hazlo. 
 
-6. Download [this project](rstudio-project-penguins.zip) to work with during the workshop and extrat the files on the .zip.
+5. Puedes eliminar el archivo que acabas de crear.
 
-7. That's it. 
+6. Descarga [este proyecto](rstudio-project-pinguinos.zip) para trabajar durante el taller y extrae los archivos del .zip en la carpeta que prefieras (recomendamos no hacerlo en el escritorio).
+
+7. Eso es todo. 

@@ -1,0 +1,71 @@
+---
+title: "Pingüinos Papúa"
+output: 
+  html_document:
+    toc: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE,
+                      warning = FALSE)
+
+library(tidyverse)
+library(readxl)
+```
+
+## Sobre los datos
+
+Los datos de **Pingüinos de Palmer** fueron recogidos y puestos a disposición por la Dra. Kristen Gorman y la [Estación Palmer en la Antártida, LTER](https://pal.lternet.edu/), que es parte de la Red de Investigación Ecológica a Largo Plazo. El conjunto de datos incluye varias características de los pingüinos Adelia, Barbijo y Papúa.
+
+```{r read}
+pinguinos <- read_csv("datos/pinguinos.csv")
+
+resumen <- pinguinos %>% 
+  group_by(especie) %>% 
+  summarise(count = n(),
+            masa_corporal_media = round(mean(masa_corporal_g/1000, na.rm = TRUE), 2))
+
+resumen %>% 
+  knitr::kable(col.names = c("Especie", "Cantidad", "Masa corporal media"),
+               align = "lcc",
+               caption = "Resumen de los pingüinos en el dataset por especie.")
+```
+
+### Pingüinos Papúa
+
+En esta sección centramos el análisis en la especie papúa. La longitud del pico está correlacionada positivamente con el alto del pico, los pingüinos con picos más largos suelen tener picos más altos también.
+
+```{r}
+pinguinos %>% 
+  filter(especie == "Papúa") %>% 
+  ggplot(aes(x = largo_pico_mm, y = alto_pico_mm)) +
+  geom_point(color = "darkorange",
+             size = 3,
+             alpha = 0.8) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkorange") +
+  theme_minimal() +
+  labs(title = "Dimensiones del pico de los pingüinos",
+       subtitle = "Alto y largo del pico de pingüinos Papúa en la Estación Palmer LTER",
+       x = "Largo del pico (mm)",
+       y = "Alto del pico (mm)",
+       color = "Especie") 
+```
+
+Las hembras y los machos de los pingüinos tienen una masa corporal diferente. Los pingüinos macho suelen ser más grandes que las hembras. 
+
+```{r}
+pinguinos %>% 
+  filter(especie == "Papúa") %>% 
+  ggplot(aes(x = masa_corporal_g)) +
+  geom_histogram(aes(fill = sexo),
+                 alpha = 0.5,
+                 position = "identity") +
+  scale_fill_manual(values = c("darkorange", "cyan4")) +
+  theme_minimal() +
+  labs(x = "Masa corporal (g)",
+       y = "Frecuencia",
+       fill = NULL,
+       title = "Masa corporal de pingüinos")
+```
+
