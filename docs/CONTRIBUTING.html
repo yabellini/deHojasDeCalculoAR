@@ -11,7 +11,7 @@
 
 
 
-<title>Learner personas for the course</title>
+<title>CONTRIBUTING</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -223,6 +226,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -230,6 +296,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -290,20 +366,22 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Learner personas for the course</h1>
 
 </div>
 
 
-<p><em>from Spreadsheet to R</em> is intended for people who usespreadsheeets (Excel, Google sheets) for data manipulation and analysis but would like to learn how to use R. In particular we are thinking of:</p>
-<ul>
-<li><p><strong>Naomi:</strong> she is doing a PhD in genetics. Has been analyzing data with Excel for almost ten years. Is going to run 300 experiments in the next six months. Doesn’t want to have to do all the analyses by hand. And wants nicer charts for her thesis than she can produce in Excel.</p></li>
-<li><p><strong>Andrea:</strong> has been working for many years analyzing crops, yields and prices from data she receives in spreadsheets. They handles Excel very well and although they has to start every analysis from scratch and need to copy tables and plots to word for the reports they need to build, they has a lot of practice. They hear about R and they thinks it can be useful to automate they workflow, but at the same time it is a challenge to change the way they has always been working.</p></li>
-<li><p><strong>Rodrigo:</strong> works with data in Google Sheets, because he edit the files with other people. Is not as experienced and often makes mistakes that force him to start the analysis over again. At the same time he is afraid of losing the original data and ends up download and saving into disck many versions of the same file. He wants to learn to program but does not know whether to start using R or Python and whether he will be able to solve the problems he has with Google Sheets with either of these tools.</p></li>
-</ul>
+<p>Contributions of all kind are welcome, from bug reports and suggestions for improvements to new material.</p>
+<ol style="list-style-type: decimal">
+<li>All contributors must abide by our <a href="https://github.com/yabellini/fromSpreadSheetToR/blob/main/CONDUCT.md">Code of Conduct</a>.</li>
+<li>By submitting a pull request, you agree that your contribution can be reshared under the <a href="https://github.com/yabellini/fromSpreadSheetToR/blob/main/LICENSE.md">CC-BY-SA License</a>.</li>
+<li>If you want to report an error, ask a question, or make a suggestion, please file an issue in the repository. You need to have a GitHub account in order to do this, but do not need to know how to use Git.</li>
+<li>If your material is incorporated, we will add you to the acknowledgments unless you request otherwise.</li>
+</ol>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -336,6 +414,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

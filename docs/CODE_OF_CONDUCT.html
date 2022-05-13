@@ -11,7 +11,7 @@
 
 
 
-<title>Bienvenides</title>
+<title>CODE_OF_CONDUCT</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -366,88 +366,105 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Bienvenides</h1>
 
 </div>
 
 
-<div id="de-que-se-trata-este-curso" class="section level3">
-<h3>De que se trata este curso?</h3>
-<p>Este curso está dirigido a <a href="personas.html">personas</a> que utilizan hojas de cálculo para la manipulación de datos y que nunca han programado, pero que les gustaría aprender a trabajar con R. Por lo tanto, comenzamos por el principio: ¿por qué usar R? y ¿por dónde empezar?</p>
-<p>Proponemos trabajar con R de forma ordenada y reproducible. Por ello, presentamos un flujo de trabajo que permite a quienes realicen este curso aplicar buenas prácticas de programación, trabajar de forma colaborativa y presentar su trabajo en un único documento que incluya el análisis y los resultados.</p>
-<p>Siempre que podamos, mencionaremos cómo lo que proponemos resolver con R también se puede hacer con hojas de cálculo y las ventajas y desventajas de cada enfoque.</p>
-<p>En cada sección incluimos actividades junto con ejemplos. Queremos que estos ejercicios sean realistas para que cualquiera pueda encontrar similitudes en sus propios datos y pueda aplicar lo aprendido a otras situaciones.</p>
-</div>
-<div id="antes-de-comenzar" class="section level3">
-<h3>Antes de comenzar</h3>
-<p>Durante este taller utilizaremos RStudio Cloud. Si quieres trabajar localmente en tu computadora usaremos R y RStudio. Por favor, <a href="prepare.html">sigue estas instrucciones para prepararte antes del taller</a>.</p>
-</div>
-<div id="agenda" class="section level3">
-<h3>Agenda</h3>
-<p>Este es un cronograma tentativo.</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Duración</th>
-<th align="left">Temas</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">55 minutos</td>
-<td align="left"><a href="01-introduction.html">Introduccion, reportes, flujo de trabajo</a></td>
-</tr>
-<tr class="even">
-<td align="left">5 minutos</td>
-<td align="left">Pausa</td>
-</tr>
-<tr class="odd">
-<td align="left">55 minutos</td>
-<td align="left"><a href="02-reading-data.html">Leyendo</a> y <a href="03-plotting-data.html">Graficando</a> datos</td>
-</tr>
-<tr class="even">
-<td align="left">5 minutos</td>
-<td align="left">Pausa</td>
-</tr>
-<tr class="odd">
-<td align="left">30 minutos</td>
-<td align="left"><a href="04-data-manipulation.html">Manipulación de datos</a></td>
-</tr>
-<tr class="even">
-<td align="left">20 minutos</td>
-<td align="left"><a href="05-reports.html">Comunicando tu trabajo</a></td>
-</tr>
-<tr class="odd">
-<td align="left">10 minutos</td>
-<td align="left">Preguntas y cierre</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="quienes-somos" class="section level3">
-<h3>¿Quienes somos?</h3>
-<p><strong>Yanina Bellini Saibene</strong></p>
-<p><img src="img/yani_circle.png" alt="Foto de Yani" width="100" height="100" align="left" style="margin:10px"/></p>
-<p>Yanina Bellini Saibene. Es investigadora titular en el Instituto Nacional de Tecnología Agropecuaria (INTA, Argentina). Aplica sus conocimientos de informática y ciencia de datos para llevar los desarrollos tecnológicos a las regiones rurales y desatendidas de Argentina. Coordina la Red Nacional de Modelización de Agroecosistemas en el INTA. También desarrolla software para apoyar la investigación y la educación. Es profesora de grado y posgrado en varias universidades de Argentina y Uruguay, enseñando Ciencia de Datos aplicada y desarrollando cursos abiertos y tutoriales para enseñar habilidades técnicas en el manejo de datos. Es formadora e instructora de <a href="https://carpentries.org/">The Carpentries</a> e instructora certificada de <a href="https://education.rstudio.com/trainers/people/bellini_saibene+yanina/">RStudio</a>. Ha formado a profesores desde 1996 a través de la Red Federal de Formación Docente Continua (Ministerio de Educación de la Nación, Argentina). Es cofundadora y miembro del core team de <a href="http://metadocencia.org/">MetaDocencia</a>. Forma parte del equipo de R-Ladies Global, preside varias conferencias internacionales (user! 2021, LatinR, JAIIO) y es conferenciante internacional. También lidera y participa en la traducción comunitaria de material educativo y técnico al español, como Teaching Tech Together, R4DS, y The Carpentries Lessons.</p>
-<p><a href="https://yabellini.netlify.com/">yabellini.netlify.com</a></p>
-<p><strong>Pao Corrales</strong></p>
-<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Paola Corrales. Es estudiante de doctorado en la Universidad de Buenos Aires. Estudia ciencias de la atmósfera aplicando técnicas de asimilación de datos para mejorar los pronósticos a corto plazo de eventos severos en Argentina. Es trainer e instructora de <a href="https://carpentries.org/">The Carpentries</a> e instructora certificada de <a href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a>. También ha contribuido a proyectos de traducción de materiales de The Carpentries y al libro Teaching Tech Together. Forma parte de Expedición Ciencia, una organización sin ánimo de lucro con sede en Argentina, donde dirige proyectos educativos como campamentos y talleres de ciencia para estudiantes y profesores de ciencias de primaria y secundaria. Es profesora de la Licenciatura y la diplomatura en Ciencias de Datos de la Universidad Guillermo Brown. Es cofundadora de <a href="http://metadocencia.org/">MetaDocencia</a>. También desarrolla materiales de licencia abierta para enseñar y aprender R desde cero.</p>
-<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> | <a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
-<p><img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/> Yani y Pao forman parte de MetaDocencia, una organización sin fines de lucro que nutre a una comunidad de educadores y educadoras de habla hispana mediante la enseñanza de métodos educativos concretos, basados en la evidencia y centrados en los y las estudiantes. MetaDocencia desarrolla en colaboración recursos abiertos, reutilizables y accesibles para fomentar prácticas de formación eficaces.</p>
-<p><a href="https://www.metadocencia.org/">MetaDocencia.org</a></p>
-<hr />
-<div id="licencia" class="section level4">
-<h4>Licencia</h4>
-<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /> Todos los materiales de este curso en encuentra bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
-<p>Nos inspiramos y nos basamos en los siguientes recursos:</p>
+<div id="code-of-conduct" class="section level1">
+<h1>Code of conduct</h1>
 <ul>
-<li><p><a href="https://swcarpentry.github.io/r-novice-gapminder/">R for Reproducible Scientific Analysis</a> por The Carpentries</p></li>
-<li><p><a href="https://rstudio-conf-2020.github.io/r-for-excel/">R for Excel Users</a> por Dr. Julie Stewart Lowndes and Dr. Allison Horst</p></li>
-<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a> por Hadley Wickham</p></li>
-<li><p><a href="https://paocorrales.github.io/deExcelaR/">de Excel a R</a> por Paola Corrales y Elio Campitelli</p></li>
-<li><p><a href="https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/">An Antarctic Tour of the Tidyverse</a> por Silvia Canelón</p></li>
+<li><a href="#code-of-conduct">English</a></li>
+<li><a href="#código-de-conducta">Spanish</a></li>
 </ul>
-<p>El código fuente de estos materiales y la página web pueden encontrarse en <a href="https://github.com/yabellini/deHojasDeCalculoAR" class="uri">https://github.com/yabellini/deHojasDeCalculoAR</a>.</p>
+<div id="code-of-conduct-1" class="section level2">
+<h2>Code of conduct</h2>
+<p>Those of us who organize MetaDocencia are committed to fostering an open, safe and friendly environment and to guaranteeing the participation of all people in our activities and virtual spaces regardless of age, gender, sexual orientation, disability, physical appearance, nationality, race, ethnicity, religion (or lack thereof), ideology or technological choices.</p>
+<p>All persons participating in MetaDocencia, including members of the coordinating team, collaborators, advisory team and participants must accept and respect the following code of conduct.</p>
+<p>If you witness a situation that violates this code of conduct, please report it to <a href="mailto:cdc@metadocencia.org">cdc@metadocencia.org</a> or any <a href="#cdc_members">Code of Conduct team member</a>.</p>
+<div id="examples-of-behaviors-that-contribute-to-creating-a-positive-environment-for-our-community" class="section level4">
+<h4>Examples of behaviors that contribute to creating a positive environment for our community:</h4>
+<ul>
+<li>Demonstrating empathy and kindness to others</li>
+<li>Respecting different opinions, points of view, and experiences</li>
+<li>Giving and accepting appropriate constructive feedback</li>
+<li>Accepting responsibility and apologising to those we affect for our mistakes, learning from experience</li>
+<li>Focusing on what is best not only for us as individuals, but for the community at large</li>
+</ul>
+</div>
+<div id="examples-of-unacceptable-behavior" class="section level4">
+<h4>Examples of unacceptable behavior:</h4>
+<ul>
+<li>Using sexualized language or images as well as any unwanted sexual attention or advances</li>
+<li>Derogatory comments (trolling), insults and personal or political attacks</li>
+<li>Any kind of harassment in public or private</li>
+<li>Publishing other people’s private information, such as physical or e-mail addresses, without their explicit permission</li>
+<li>Other conduct that may reasonably be considered inappropriate in a professional setting</li>
+</ul>
+</div>
+</div>
+<div id="scope" class="section level2">
+<h2>Scope</h2>
+<p>This code of conduct applies to all spaces related to MetaDocencia. This includes our email accounts, our Slack, our social networks, our workshops through Zoom, our GitHub organization and all its repositories, and any other media that is part of MetaDocencia.</p>
+</div>
+<div id="responsibilities-of-the-code-of-conduct-team" class="section level2">
+<h2>Responsibilities of the Code of Conduct Team</h2>
+<p>The Code of Conduct team, composed of MetaDocencia members, is responsible for clarifying standards of acceptable behavior and reserves the right of admission or removal, temporary or permanent, from the MetaDocencia community for any behavior deemed unacceptable.</p>
+<p>It also has the responsibility and reserves the right to remove, edit or reject comments, materials and other contributions that are not aligned with this Code of Conduct.</p>
+<p>Cases of unacceptable behavior may be reported by sending an email to <a href="mailto:cdc@metadocencia.org">cdc@metadocencia.org</a> or to any member of the Code of Conduct team. All messages will be reviewed and investigated and will result in a response appropriate to the circumstances. The privacy and security of those affected and/or reporting an incident will be respected at all times.</p>
+<p>Individuals who are part of the Code of Conduct team agree to recuse themselves in the event of a conflict of interest associated with an incident report.</p>
+<div id="cdc_members" class="section level3">
+<h3>Code of Conduct team members</h3>
+<p>Team under construction * Someone from the core team * Someone from the collaborators * Someone from the collaborators * Someone from the advisory team</p>
+</div>
+</div>
+<div id="attribution" class="section level2">
+<h2>Attribution</h2>
+<p>This Code of Conduct is adapted from <a href="https://www.contributor-covenant.org">Contributor Covenant</a>, version 2.0, available at <a href="https://www.contributor-covenant.org/es/version/2/0/code_of_conduct.html" class="uri">https://www.contributor-covenant.org/es/version/2/0/code_of_conduct.html</a> and <a href="https://user2021.r-project.org/participation/coc/">the code of conduct developed for useR!2021</a>.</p>
+</div>
+<div id="código-de-conducta" class="section level2">
+<h2>Código de Conducta</h2>
+<p>Quienes organizamos MetaDocencia nos comprometemos a fomentar un ambiente abierto, seguro y amigable y garantizar la participación de todas las personas en nuestras actividades y espacios virtuales independientemente de su edad, género, orientación sexual, discapacidad, apariencia física, nacionalidad, raza, etnia, religión (o la falta de ella), ideología u opciones tecnológicas.</p>
+<p>Todas las personas que participen en MetaDocencia, incluyendo integrantes del equipo coordinador, colaboradores, equipo asesor y participantes deberán aceptar y respetar el siguiente código de conducta.</p>
+<p>Si presencias una situación que viole este código de conducta, por favor, reportalo a <a href="mailto:cdc@metadocencia.org">cdc@metadocencia.org</a> o al <a href="#miembros_cdc">equipo de Código de Conducta</a>.</p>
+<div id="ejemplos-de-comportamiento-que-contribuyen-a-crear-un-ambiente-positivo-para-nuestra-comunidad" class="section level4">
+<h4>Ejemplos de comportamiento que contribuyen a crear un ambiente positivo para nuestra comunidad:</h4>
+<ul>
+<li>Demostrar empatía y amabilidad ante otras personas</li>
+<li>Respetar diferentes opiniones, puntos de vista y experiencias</li>
+<li>Dar y aceptar adecuadamente retroalimentación constructiva</li>
+<li>Aceptar la responsabilidad y disculparse ante quienes afectemos por nuestros errores, involuntarios o no, aprendiendo de la experiencia</li>
+<li>Centrarse en lo que sea mejor no sólo para nosotros como personas, sino para la comunidad en general</li>
+</ul>
+</div>
+<div id="ejemplos-de-comportamiento-inaceptable" class="section level4">
+<h4>Ejemplos de comportamiento inaceptable:</h4>
+<ul>
+<li>El uso de lenguaje o imágenes sexualizadas como también atención o avances sexuales no deseados</li>
+<li>Comentarios despectivos (trolling), insultantes y ataques personales</li>
+<li>Cualquier tipo de acoso en público o privado</li>
+<li>Publicar información privada de otras personas, tales como direcciones físicas o de correo electrónico, sin su permiso explícito</li>
+<li>Otras conductas que puedan ser razonablemente consideradas como inapropiadas en un entorno profesional</li>
+</ul>
+</div>
+</div>
+<div id="alcance" class="section level2">
+<h2>Alcance</h2>
+<p>Este código de conducta aplica a todos los espacios relacionados con MetaDocencia. Esto incluye nuestras cuentas de correo electrónico, nuestro Slack, nuestras redes sociales, nuestros talleres, nuestra organización en GitHub y todos sus repositorios y cualquier otro medio que sea parte de MetaDocencia.</p>
+</div>
+<div id="responsabilidades-del-equipo-de-código-de-conducta" class="section level2">
+<h2>Responsabilidades del equipo de Código de Conducta</h2>
+<p>El equipo de Código de Conducta formado por integrantes de MetaDocencia es responsable de aclarar los estándares de comportamiento aceptable y se reserva el derecho de admisión o permanencia, temporal o permanente, en la comunidad de MetaDocencia para cualquier caso de comportamiento considerado inaceptable.</p>
+<p>También tiene la responsabilidad y se reserva el derecho de eliminar, editar o rechazar comentarios, materiales y otras contribuciones que no estén alineadas con este Código de Conducta.</p>
+<p>Los casos de comportamiento inaceptable pueden ser informados enviando un correo electrónico a <a href="mailto:cdc@metadocencia.org">cdc@metadocencia.org</a> o a cualquier persona que integra el equipo de Código de Conducta. Todos los mensajes serán revisados e investigados y darán como resultado una respuesta apropiada a las circunstancias. Se respetará en todo momento la privacidad y seguridad de las personas afectadas y/o que reporten un incidente.</p>
+<p>Las personas que forman parte del equipo de Código de Conducta se comprometen a recusarse en caso de haber conflicto de intereses asociados al reporte de un incidente.</p>
+<div id="miembros_cdc" class="section level3">
+<h3>Integrantes del equipo de Código de Conducta</h3>
+<p>Equipo en construcción * Alguien del core tean * Alguien de colaboradores * Alguien de colaboradores * Alguien del advisory team</p>
+</div>
+</div>
+<div id="atribución" class="section level2">
+<h2>Atribución</h2>
+<p>Este Código de Conducta es una adaptación del <a href="https://www.contributor-covenant.org">Contributor Covenant</a>, versión 2.0, disponible en <a href="https://www.contributor-covenant.org/es/version/2/0/code_of_conduct.html" class="uri">https://www.contributor-covenant.org/es/version/2/0/code_of_conduct.html</a> y <a href="https://user2021.r-project.org/participation/coc/">el código de conducta desarrollado para useR!2021</a>.</p>
 </div>
 </div>
 
