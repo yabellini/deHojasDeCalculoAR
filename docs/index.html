@@ -373,19 +373,39 @@ div.tocify {
 
 <div id="de-que-se-trata-este-curso" class="section level3">
 <h3>De que se trata este curso?</h3>
-<p>Este curso está dirigido a <a href="personas.html">personas</a> que utilizan hojas de cálculo para la manipulación de datos y que nunca han programado, pero que les gustaría aprender a trabajar con R. Por lo tanto, comenzamos por el principio: ¿por qué usar R? y ¿por dónde empezar?</p>
-<p>Proponemos trabajar con R de forma ordenada y reproducible. Por ello, presentamos un flujo de trabajo que permite a quienes realicen este curso aplicar buenas prácticas de programación, trabajar de forma colaborativa y presentar su trabajo en un único documento que incluya el análisis y los resultados.</p>
-<p>Siempre que podamos, mencionaremos cómo lo que proponemos resolver con R también se puede hacer con hojas de cálculo y las ventajas y desventajas de cada enfoque.</p>
-<p>En cada sección incluimos actividades junto con ejemplos. Queremos que estos ejercicios sean realistas para que cualquiera pueda encontrar similitudes en sus propios datos y pueda aplicar lo aprendido a otras situaciones.</p>
+<p>Este curso está dirigido a <a href="personas.html">personas</a> que
+utilizan hojas de cálculo para la manipulación de datos y que nunca han
+programado, pero que les gustaría aprender a trabajar con R. Por lo
+tanto, comenzamos por el principio: ¿por qué usar R? y ¿por dónde
+empezar?</p>
+<p>Proponemos trabajar con R de forma ordenada y reproducible. Por ello,
+presentamos un flujo de trabajo que permite a quienes realicen este
+curso aplicar buenas prácticas de programación, trabajar de forma
+colaborativa y presentar su trabajo en un único documento que incluya el
+análisis y los resultados.</p>
+<p>Siempre que podamos, mencionaremos cómo lo que proponemos resolver
+con R también se puede hacer con hojas de cálculo y las ventajas y
+desventajas de cada enfoque.</p>
+<p>En cada sección incluimos actividades junto con ejemplos. Queremos
+que estos ejercicios sean realistas para que cualquiera pueda encontrar
+similitudes en sus propios datos y pueda aplicar lo aprendido a otras
+situaciones.</p>
 </div>
 <div id="antes-de-comenzar" class="section level3">
 <h3>Antes de comenzar</h3>
-<p>Durante este taller utilizaremos RStudio Cloud. Si quieres trabajar localmente en tu computadora usaremos R y RStudio. Por favor, <a href="prepare.html">sigue estas instrucciones para prepararte antes del taller</a>.</p>
+<p>Durante este taller utilizaremos RStudio Cloud. Si quieres trabajar
+localmente en tu computadora usaremos R y RStudio. Por favor, <a
+href="prepare.html">sigue estas instrucciones para prepararte antes del
+taller</a>.</p>
 </div>
 <div id="agenda" class="section level3">
 <h3>Agenda</h3>
 <p>Este es un cronograma tentativo.</p>
 <table>
+<colgroup>
+<col width="26%" />
+<col width="73%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Duración</th>
@@ -395,7 +415,8 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td align="left">55 minutos</td>
-<td align="left"><a href="01-introduction.html">Introduccion, reportes, flujo de trabajo</a></td>
+<td align="left"><a href="01-introduction.html">Introduccion, reportes,
+flujo de trabajo</a></td>
 </tr>
 <tr class="even">
 <td align="left">5 minutos</td>
@@ -403,7 +424,8 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td align="left">55 minutos</td>
-<td align="left"><a href="02-reading-data.html">Leyendo</a> y <a href="03-plotting-data.html">Graficando</a> datos</td>
+<td align="left"><a href="02-reading-data.html">Leyendo</a> y <a
+href="03-plotting-data.html">Graficando</a> datos</td>
 </tr>
 <tr class="even">
 <td align="left">5 minutos</td>
@@ -411,11 +433,13 @@ div.tocify {
 </tr>
 <tr class="odd">
 <td align="left">30 minutos</td>
-<td align="left"><a href="04-data-manipulation.html">Manipulación de datos</a></td>
+<td align="left"><a href="04-data-manipulation.html">Manipulación de
+datos</a></td>
 </tr>
 <tr class="even">
 <td align="left">20 minutos</td>
-<td align="left"><a href="05-reports.html">Comunicando tu trabajo</a></td>
+<td align="left"><a href="05-reports.html">Comunicando tu
+trabajo</a></td>
 </tr>
 <tr class="odd">
 <td align="left">10 minutos</td>
@@ -428,26 +452,78 @@ div.tocify {
 <h3>¿Quienes somos?</h3>
 <p><strong>Yanina Bellini Saibene</strong></p>
 <p><img src="img/yani_circle.png" alt="Foto de Yani" width="100" height="100" align="left" style="margin:10px"/></p>
-<p>Yanina Bellini Saibene. Es investigadora titular en el Instituto Nacional de Tecnología Agropecuaria (INTA, Argentina). Aplica sus conocimientos de informática y ciencia de datos para llevar los desarrollos tecnológicos a las regiones rurales y desatendidas de Argentina. Coordina la Red Nacional de Modelización de Agroecosistemas en el INTA. También desarrolla software para apoyar la investigación y la educación. Es profesora de grado y posgrado en varias universidades de Argentina y Uruguay, enseñando Ciencia de Datos aplicada y desarrollando cursos abiertos y tutoriales para enseñar habilidades técnicas en el manejo de datos. Es formadora e instructora de <a href="https://carpentries.org/">The Carpentries</a> e instructora certificada de <a href="https://education.rstudio.com/trainers/people/bellini_saibene+yanina/">RStudio</a>. Ha formado a profesores desde 1996 a través de la Red Federal de Formación Docente Continua (Ministerio de Educación de la Nación, Argentina). Es cofundadora y miembro del core team de <a href="http://metadocencia.org/">MetaDocencia</a>. Forma parte del equipo de R-Ladies Global, preside varias conferencias internacionales (user! 2021, LatinR, JAIIO) y es conferenciante internacional. También lidera y participa en la traducción comunitaria de material educativo y técnico al español, como Teaching Tech Together, R4DS, y The Carpentries Lessons.</p>
-<p><a href="https://yabellini.netlify.com/">yabellini.netlify.com</a></p>
+<p>Yanina Bellini Saibene. Investigadora en el Instituto Nacional de
+Tecnología Agropecuaria (INTA, Argentina). Aplica sus conocimientos de
+informática y ciencia de datos para llevar los desarrollos tecnológicos
+a las regiones rurales y desatendidas de Argentina. También desarrolla
+software para apoyar la investigación y la educación. Es profesora de
+grado y posgrado en varias universidades de Argentina y Uruguay,
+enseñando Ciencia de Datos aplicada y desarrollando cursos abiertos y
+tutoriales para enseñar habilidades técnicas en el manejo de datos. Es
+formadora, instructora y miembro del Executive Council de <a
+href="https://carpentries.org/">The Carpentries</a> e instructora
+certificada de <a
+href="https://education.rstudio.com/trainers/people/bellini_saibene+yanina/">RStudio</a>.
+Es cofundadora de <a href="http://metadocencia.org/">MetaDocencia</a>.
+Forma parte del equipo de R-Ladies Global y RForwards. También lidera y
+participa en la traducción comunitaria de material educativo y técnico
+al español, como Teaching Tech Together, R4DS, y The Carpentries
+Lessons.</p>
+<p><a href="https://yabellini.netlify.com/">yabellini.netlify.com</a> |
+<a href="https://twitter.com/yabellini">@yabellini</a></p>
 <p><strong>Pao Corrales</strong></p>
-<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/> Paola Corrales. Es estudiante de doctorado en la Universidad de Buenos Aires. Estudia ciencias de la atmósfera aplicando técnicas de asimilación de datos para mejorar los pronósticos a corto plazo de eventos severos en Argentina. Es trainer e instructora de <a href="https://carpentries.org/">The Carpentries</a> e instructora certificada de <a href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a>. También ha contribuido a proyectos de traducción de materiales de The Carpentries y al libro Teaching Tech Together. Forma parte de Expedición Ciencia, una organización sin ánimo de lucro con sede en Argentina, donde dirige proyectos educativos como campamentos y talleres de ciencia para estudiantes y profesores de ciencias de primaria y secundaria. Es profesora de la Licenciatura y la diplomatura en Ciencias de Datos de la Universidad Guillermo Brown. Es cofundadora de <a href="http://metadocencia.org/">MetaDocencia</a>. También desarrolla materiales de licencia abierta para enseñar y aprender R desde cero.</p>
-<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> | <a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
-<p><img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/> Yani y Pao forman parte de MetaDocencia, una organización sin fines de lucro que nutre a una comunidad de educadores y educadoras de habla hispana mediante la enseñanza de métodos educativos concretos, basados en la evidencia y centrados en los y las estudiantes. MetaDocencia desarrolla en colaboración recursos abiertos, reutilizables y accesibles para fomentar prácticas de formación eficaces.</p>
+<p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/>
+Paola Corrales. Es estudiante de doctorado en la Universidad de Buenos
+Aires. Estudia ciencias de la atmósfera aplicando técnicas de
+asimilación de datos para mejorar los pronósticos a corto plazo de
+eventos severos en Argentina. Es trainer e instructora de <a
+href="https://carpentries.org/">The Carpentries</a> e instructora
+certificada de <a
+href="https://education.rstudio.com/trainers/people/corrales+paola/">RStudio</a>.
+También ha contribuido a proyectos de traducción de materiales de The
+Carpentries y al libro Teaching Tech Together. Forma parte de Expedición
+Ciencia, una organización sin ánimo de lucro con sede en Argentina,
+donde dirige proyectos educativos como campamentos y talleres de ciencia
+para estudiantes y profesores de ciencias de primaria y secundaria. Es
+profesora de la Licenciatura y la diplomatura en Ciencias de Datos de la
+Universidad Guillermo Brown. Es cofundadora de <a
+href="http://metadocencia.org/">MetaDocencia</a>. También desarrolla
+materiales de licencia abierta para enseñar y aprender R desde cero.</p>
+<p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> |
+<a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
+<p><img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/>
+Yani y Pao forman parte de MetaDocencia, una organización sin fines de
+lucro que nutre a una comunidad de educadores y educadoras de habla
+hispana mediante la enseñanza de métodos educativos concretos, basados
+en la evidencia y centrados en los y las estudiantes. MetaDocencia
+desarrolla en colaboración recursos abiertos, reutilizables y accesibles
+para fomentar prácticas de formación eficaces.</p>
 <p><a href="https://www.metadocencia.org/">MetaDocencia.org</a></p>
 <hr />
 <div id="licencia" class="section level4">
 <h4>Licencia</h4>
-<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /> Todos los materiales de este curso en encuentra bajo la licencia <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+<p><a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+Todos los materiales de este curso en encuentra bajo la licencia
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.es_ES">Creative
+Commons Attribution-ShareAlike 4.0 International License</a>.</p>
 <p>Nos inspiramos y nos basamos en los siguientes recursos:</p>
 <ul>
-<li><p><a href="https://swcarpentry.github.io/r-novice-gapminder/">R for Reproducible Scientific Analysis</a> por The Carpentries</p></li>
-<li><p><a href="https://rstudio-conf-2020.github.io/r-for-excel/">R for Excel Users</a> por Dr. Julie Stewart Lowndes and Dr. Allison Horst</p></li>
-<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a> por Hadley Wickham</p></li>
-<li><p><a href="https://paocorrales.github.io/deExcelaR/">de Excel a R</a> por Paola Corrales y Elio Campitelli</p></li>
-<li><p><a href="https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/">An Antarctic Tour of the Tidyverse</a> por Silvia Canelón</p></li>
+<li><p><a href="https://swcarpentry.github.io/r-novice-gapminder/">R for
+Reproducible Scientific Analysis</a> por The Carpentries</p></li>
+<li><p><a href="https://rstudio-conf-2020.github.io/r-for-excel/">R for
+Excel Users</a> por Dr. Julie Stewart Lowndes and Dr. Allison
+Horst</p></li>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a> por
+Hadley Wickham</p></li>
+<li><p><a href="https://paocorrales.github.io/deExcelaR/">de Excel a
+R</a> por Paola Corrales y Elio Campitelli</p></li>
+<li><p><a
+href="https://silvia.rbind.io/talk/2020-08-31-tour-of-the-tidyverse/">An
+Antarctic Tour of the Tidyverse</a> por Silvia Canelón</p></li>
 </ul>
-<p>El código fuente de estos materiales y la página web pueden encontrarse en <a href="https://github.com/yabellini/deHojasDeCalculoAR" class="uri">https://github.com/yabellini/deHojasDeCalculoAR</a>.</p>
+<p>El código fuente de estos materiales y la página web pueden
+encontrarse en <a href="https://github.com/yabellini/deHojasDeCalculoAR"
+class="uri">https://github.com/yabellini/deHojasDeCalculoAR</a>.</p>
 </div>
 </div>
 
