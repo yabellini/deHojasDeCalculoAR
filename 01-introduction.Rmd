@@ -18,14 +18,14 @@ Si lo que necesitás son reportes frecuentes y automáticos, y análisis de dato
 
 ## ¿Cómo vamos a trabajar?
 
-Vamos a usar R como lenguaje de programación y RStudio como una IDE (Integrated Development Environment), un Entorno Integrado de Desarrollo. Si no los tenés instalado en tu computadora, no te preocupes, tenemos este  [proyecto en RStudio Cloud](https://rstudio.cloud/project/4046044) para que puedas trabajar.
+Vamos a usar R como lenguaje de programación y RStudio como una IDE (Integrated Development Environment), un Entorno Integrado de Desarrollo. Si no los tenés instalado en tu computadora, no te preocupes, tenemos este  [proyecto en Posit Cloud](https://posit.cloud/content/4046044) para que puedas trabajar.
 
 Para iniciar RStudio, hacé doble click en el ícono de RStudio. Iniciar  RStudio también inicia R (en realidad, es probable que nunca abras R por sí mismo).
 
 
 <img src="img/rstudio-principal.png" alt="Pantalla principal de RStudio. Paneles de consola, entorno y archivos" />
 
-<img src="img/rstudio-cloud-principal.png" alt="Pantalla principal de RStudio Cloud. Paneles de consola, entorno y archivos" />
+<img src="img/rstudio-cloud-principal.png" alt="Pantalla principal de Posit Cloud. Paneles de consola, entorno y archivos" />
 
 Observa los paneles por defecto:
 
@@ -53,7 +53,7 @@ Esa flechita es el *operador de asignación* y funciona como un `=`. Ahora el re
 
 Esto es útil cuando estamos probando el código para ver si funciona pero lo perderemos todo cuando cerremos RStudio. Lo que tenemos que hacer es guardar el código que genera su análisis. Para ello utilizamos R Scripts y archivos RMarkdown.
 
-Vamos a tener nuestra primera experiencia con R a través de RMarkdown, así que vamos a ver qué es un documento RMarkdown. Te preparamos [este informe de ejemplo](penguins_report.Rmd), por favor abrilo en RStudio o en RStudio Cloud. El archivo aparecerá en un nuevo panel arriba en el lado izquierdo de la pantalla, y el panel de la consola se moverá hacia abajo.
+Vamos a tener nuestra primera experiencia con R a través de RMarkdown, así que vamos a ver qué es un documento RMarkdown. Te preparamos [este informe de ejemplo](reporte_pinguinos.Rmd), por favor abrilo en RStudio o en Posit Cloud. El archivo aparecerá en un nuevo panel arriba en el lado izquierdo de la pantalla, y el panel de la consola se moverá hacia abajo.
 
 
 ## RMarkdown

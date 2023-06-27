@@ -22,7 +22,7 @@ Estos datos están disponibles en R instalando el paquete palmerpenguins (en ing
 
 Empezaremos cargando el paquete **tidyverse**, que nos da acceso a docenas de paquetes y funciones con las que trabajar. Por ahora usaremos la función `read_csv()` para leer un archivo .csv que está almacenado en el directorio de datos. 
 
-```{r}
+```{r warning=FALSE}
 library(tidyverse)
 
 pinguinos <- read_csv("datos/pinguinos.csv")
@@ -33,7 +33,7 @@ En Excel o Google Sheets, los datos se almacenan en la hoja de cálculo y se org
 
 <img src="img/view_en_rstudio.png" alt="La pestaña de visualización del data.frame con los datos de pinguinos luego de llamar a la función View()" />
 
-Esta previsualización es lo más parecida a la que tenemos en una hoja de cálculo. Podemos llegar a este panel ejecutando `View(pinguinos)` en la consola. Hay otras funciones que nos sirven para visualizar nuestros datos.  Vamos a utilizar una de ellas:
+Esta previsualización es lo más parecida a la que tenemos en una hoja de cálculo. Podemos llegar a este panel ejecutando `View(pinguinos)` en la consola (Importante: R distingue mayúsculas de minísculas!). Hay otras funciones que nos sirven para visualizar nuestros datos.  Vamos a utilizar una de ellas:
 
 ```{r}
 glimpse(pinguinos)
