@@ -9,7 +9,7 @@ Para participar en este taller puedes instalar R (>4.0) y Rstudio (revisa las in
 
 #### Usando RStudio Cloud
 
-Si quieres usar RStudio Cloud necesitarás una cuenta gratuita. Ingresa a [rstudio.cloud/](https://rstudio.cloud/) y sigue las instrucciones para registrarte. Ten en cuenta que la cuenta gratuita tiene un límite de uso de 15 horas por mes, te recomendamos no usar todas las horas antes del taller.
+Si quieres usar RStudio Cloud necesitarás una cuenta gratuita. Ingresa a [posit.cloud/](https://posit.cloud/) y sigue las instrucciones para registrarte. Ten en cuenta que la cuenta gratuita tiene un límite de uso de 15 horas por mes, te recomendamos no usar todas las horas antes del taller.
 
 Durante el taller compartiremos un link a un proyecto de RStudio listo para usar. No es necesario que hagas nada más. 
 
