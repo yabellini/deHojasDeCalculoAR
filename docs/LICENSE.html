@@ -13,7 +13,7 @@
 
 <title>LICENSE</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -145,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -178,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -187,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -370,26 +367,42 @@ div.tocify {
 </div>
 
 
-<p>This is a human-readable summary of (and not a substitute for) the <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">license</a>. You are free to:</p>
+<p>This is a human-readable summary of (and not a substitute for) the <a
+href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">license</a>.
+You are free to:</p>
 <ul>
-<li>Share — copy and redistribute the material in any medium or format</li>
+<li>Share — copy and redistribute the material in any medium or
+format</li>
 <li>Adapt — remix, transform, and build upon the material</li>
 <li>for any purpose, even commercially.</li>
 </ul>
 <p>This license is acceptable for Free Cultural Works.</p>
 <ul>
-<li>The licensor cannot revoke these freedoms as long as you follow the license terms.</li>
+<li>The licensor cannot revoke these freedoms as long as you follow the
+license terms.</li>
 </ul>
 <p>Under the following terms:</p>
 <ul>
-<li><p>Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.</p></li>
-<li><p>ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</p></li>
-<li><p>No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</p></li>
+<li><p>Attribution — You must give appropriate credit, provide a link to
+the license, and indicate if changes were made. You may do so in any
+reasonable manner, but not in any way that suggests the licensor
+endorses you or your use.</p></li>
+<li><p>ShareAlike — If you remix, transform, or build upon the material,
+you must distribute your contributions under the same license as the
+original.</p></li>
+<li><p>No additional restrictions — You may not apply legal terms or
+technological measures that legally restrict others from doing anything
+the license permits.</p></li>
 </ul>
 <p>Notices:</p>
 <ul>
-<li>You do not have to comply with the license for elements of the material in the public domain or where your use is permitted by an applicable exception or limitation.</li>
-<li>No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.</li>
+<li>You do not have to comply with the license for elements of the
+material in the public domain or where your use is permitted by an
+applicable exception or limitation.</li>
+<li>No warranties are given. The license may not give you all of the
+permissions necessary for your intended use. For example, other rights
+such as publicity, privacy, or moral rights may limit how you use the
+material.</li>
 </ul>
 
 

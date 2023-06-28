@@ -13,7 +13,7 @@
 
 <title>Pingüinos Papúa</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -142,11 +142,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -175,8 +179,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -184,16 +188,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -297,7 +294,12 @@ $(document).ready(function () {
 
 <div id="sobre-los-datos" class="section level2">
 <h2>Sobre los datos</h2>
-<p>Los datos de <strong>Pingüinos de Palmer</strong> fueron recogidos y puestos a disposición por la Dra. Kristen Gorman y la <a href="https://pal.lternet.edu/">Estación Palmer en la Antártida, LTER</a>, que es parte de la Red de Investigación Ecológica a Largo Plazo. El conjunto de datos incluye varias características de los pingüinos Adelia, Barbijo y Papúa.</p>
+<p>Los datos de <strong>Pingüinos de Palmer</strong> fueron recogidos y
+puestos a disposición por la Dra. Kristen Gorman y la <a
+href="https://pal.lternet.edu/">Estación Palmer en la Antártida,
+LTER</a>, que es parte de la Red de Investigación Ecológica a Largo
+Plazo. El conjunto de datos incluye varias características de los
+pingüinos Adelia, Barbijo y Papúa.</p>
 <table>
 <caption>Resumen de los pingüinos en el dataset por especie.</caption>
 <thead>
@@ -327,9 +329,14 @@ $(document).ready(function () {
 </table>
 <div id="pingüinos-papúa" class="section level3">
 <h3>Pingüinos Papúa</h3>
-<p>En esta sección centramos el análisis en la especie papúa. La longitud del pico está correlacionada positivamente con el alto del pico, los pingüinos con picos más largos suelen tener picos más altos también.</p>
+<p>En esta sección centramos el análisis en la especie papúa. La
+longitud del pico está correlacionada positivamente con el alto del
+pico, los pingüinos con picos más largos suelen tener picos más altos
+también.</p>
 <p><img src="reporte_pinguinos_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<p>Las hembras y los machos de los pingüinos tienen una masa corporal diferente. Los pingüinos macho suelen ser más grandes que las hembras.</p>
+<p>Las hembras y los machos de los pingüinos tienen una masa corporal
+diferente. Los pingüinos macho suelen ser más grandes que las
+hembras.</p>
 <p><img src="reporte_pinguinos_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 </div>

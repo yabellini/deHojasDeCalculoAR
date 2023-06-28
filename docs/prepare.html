@@ -13,7 +13,7 @@
 
 <title>Antes de comenzar</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -142,11 +142,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -175,8 +179,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -184,16 +188,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -295,27 +292,43 @@ $(document).ready(function () {
 </div>
 
 
-<p>Para participar en este taller puedes instalar R (&gt;4.0) y Rstudio (revisa las instrucción más abajo) o usar una instancia de R en RStudio Cloud.</p>
+<p>Para participar en este taller puedes instalar R (&gt;4.0) y Rstudio
+(revisa las instrucción más abajo) o usar una instancia de R en RStudio
+Cloud.</p>
 <div id="usando-rstudio-cloud" class="section level4">
 <h4>Usando RStudio Cloud</h4>
-<p>Si quieres usar RStudio Cloud necesitarás una cuenta gratuita. Ingresa a <a href="https://rstudio.cloud/">rstudio.cloud/</a> y sigue las instrucciones para registrarte. Ten en cuenta que la cuenta gratuita tiene un límite de uso de 15 horas por mes, te recomendamos no usar todas las horas antes del taller.</p>
-<p>Durante el taller compartiremos un link a un proyecto de RStudio listo para usar. No es necesario que hagas nada más.</p>
+<p>Si quieres usar RStudio Cloud necesitarás una cuenta gratuita.
+Ingresa a <a href="https://posit.cloud/">posit.cloud/</a> y sigue las
+instrucciones para registrarte. Ten en cuenta que la cuenta gratuita
+tiene un límite de uso de 15 horas por mes, te recomendamos no usar
+todas las horas antes del taller.</p>
+<p>Durante el taller compartiremos un link a un proyecto de RStudio
+listo para usar. No es necesario que hagas nada más.</p>
 </div>
 <div id="instalando-r-y-rstudio" class="section level4">
 <h4>Instalando R y RStudio</h4>
-<p>Para instalar R y RStudio sigue las instrucciones en <a href="https://www.youtube.com/playlist?list=PLRPB0ZzEYegOZivdelOuEn-R-XUN-DOjd">estos videos</a> de <a href="https://djnavarro.net/">Danielle Navarro</a>.</p>
-<p>Después instalar todo, tendrás que instalar algunos paquetes necesarios para el taller. Sigue estas instrucciones:</p>
+<p>Para instalar R y RStudio sigue las instrucciones en <a
+href="https://www.youtube.com/playlist?list=PLRPB0ZzEYegOZivdelOuEn-R-XUN-DOjd">estos
+videos</a> de <a href="https://djnavarro.net/">Danielle Navarro</a>.</p>
+<p>Después instalar todo, tendrás que instalar algunos paquetes
+necesarios para el taller. Sigue estas instrucciones:</p>
 <ol style="list-style-type: decimal">
 <li>Abre RStudio</li>
-<li>En la consola (el panel de la izquierda) escriba los siguientes comandos:</li>
+<li>En la consola (el panel de la izquierda) escriba los siguientes
+comandos:</li>
 </ol>
 <pre class="r"><code>install.packages(&quot;tidyverse&quot;)
 install.packages(&quot;datos&quot;)</code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Haz click en Archivo -&gt; Nuevo Archivo -&gt; R Markdown. Haz clic en “Ok” para crear un nuevo archivo.</p></li>
-<li><p>RStudio te pedirá permiso para instalar varios paquetes. Adelante, hazlo.</p></li>
+<li><p>Haz click en Archivo -&gt; Nuevo Archivo -&gt; R Markdown. Haz
+clic en “Ok” para crear un nuevo archivo.</p></li>
+<li><p>RStudio te pedirá permiso para instalar varios paquetes.
+Adelante, hazlo.</p></li>
 <li><p>Puedes eliminar el archivo que acabas de crear.</p></li>
-<li><p>Descarga <a href="rstudio-project-pinguinos.zip">este proyecto</a> para trabajar durante el taller y extrae los archivos del .zip en la carpeta que prefieras (recomendamos no hacerlo en el escritorio).</p></li>
+<li><p>Descarga <a href="rstudio-project-pinguinos.zip">este
+proyecto</a> para trabajar durante el taller y extrae los archivos del
+.zip en la carpeta que prefieras (recomendamos no hacerlo en el
+escritorio).</p></li>
 <li><p>Eso es todo.</p></li>
 </ol>
 </div>

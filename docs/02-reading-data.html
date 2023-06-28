@@ -13,7 +13,7 @@
 
 <title>Leyendo datos</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -124,13 +124,20 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -231,11 +238,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -264,8 +275,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -273,16 +284,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -395,42 +399,72 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#sobre-los-pingüinos-de-palmer">Sobre los Pingüinos de Palmer</a></li>
-<li><a href="#leyendo-archivos-csv">Leyendo archivos csv</a></li>
-<li><a href="#leyendo-archivos-xlsx">Leyendo archivos xlsx</a></li>
+<li><a href="#sobre-los-pingüinos-de-palmer"
+id="toc-sobre-los-pingüinos-de-palmer">Sobre los Pingüinos de
+Palmer</a></li>
+<li><a href="#leyendo-archivos-csv"
+id="toc-leyendo-archivos-csv">Leyendo archivos csv</a></li>
+<li><a href="#leyendo-archivos-xlsx"
+id="toc-leyendo-archivos-xlsx">Leyendo archivos xlsx</a></li>
 </ul>
 </div>
 
 <div id="sobre-los-pingüinos-de-palmer" class="section level2">
 <h2>Sobre los Pingüinos de Palmer</h2>
-<p>Es hora de presentar el conjunto de datos que estamos utilizando. Los datos de <strong>Pingüinos de Palmer</strong> fueron recogidos y puestos a disposición por la Dra. Kristen Gorman y la <a href="https://pal.lternet.edu/">Estación Palmer en la Antártida, LTER</a>, que es parte de la Red de Investigación Ecológica a Largo Plazo. El conjunto de datos incluye varias características de los pingüinos Adelia, Barbijo y Papúa. Puedes leer más sobre ello en la <a href="https://allisonhorst.github.io/palmerpenguins/">documentación de palmerpenguins</a>.</p>
-<p>Estos datos están disponibles en R instalando el paquete palmerpenguins (en inglés) o el paquete datos (en español), pero como queremos aprender a leer datos en R, vamos a leerlos desde archivos csv y xls.</p>
+<p>Es hora de presentar el conjunto de datos que estamos utilizando. Los
+datos de <strong>Pingüinos de Palmer</strong> fueron recogidos y puestos
+a disposición por la Dra. Kristen Gorman y la <a
+href="https://pal.lternet.edu/">Estación Palmer en la Antártida,
+LTER</a>, que es parte de la Red de Investigación Ecológica a Largo
+Plazo. El conjunto de datos incluye varias características de los
+pingüinos Adelia, Barbijo y Papúa. Puedes leer más sobre ello en la <a
+href="https://allisonhorst.github.io/palmerpenguins/">documentación de
+palmerpenguins</a>.</p>
+<p>Estos datos están disponibles en R instalando el paquete
+palmerpenguins (en inglés) o el paquete datos (en español), pero como
+queremos aprender a leer datos en R, vamos a leerlos desde archivos csv
+y xls.</p>
 </div>
 <div id="leyendo-archivos-csv" class="section level2">
 <h2>Leyendo archivos csv</h2>
-<p>Empezaremos cargando el paquete <strong>tidyverse</strong>, que nos da acceso a docenas de paquetes y funciones con las que trabajar. Por ahora usaremos la función <code>read_csv()</code> para leer un archivo .csv que está almacenado en el directorio de datos.</p>
+<p>Empezaremos cargando el paquete <strong>tidyverse</strong>, que nos
+da acceso a docenas de paquetes y funciones con las que trabajar. Por
+ahora usaremos la función <code>read_csv()</code> para leer un archivo
+.csv que está almacenado en el directorio de datos.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
-## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
-## ✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;datos/pinguinos.csv&quot;</span>)</span></code></pre></div>
-<pre><code>## Rows: 344 Columns: 8</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## ── Attaching core tidyverse packages ─────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.1     
+## ── Conflicts ───────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;datos/pinguinos.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 344 Columns: 8
+## ── Column specification ───────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (3): especie, isla, sexo
 ## dbl (5): largo_pico_mm, alto_pico_mm, largo_aleta_mm, masa_corporal_g, anio
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>En Excel o Google Sheets, los datos se almacenan en la hoja de cálculo y se organizan en celdas. En R, se almacenan en objetos. Cuando leemos un archivo csv, los datos van directo a un data.frame llamado <code>pinguinos</code> y están listos para ser utilizados. En la solapa “Environment” podemos ver el objeto <code>pinguinos</code>, y si hacemos clic en ese objeto los datos se abrirán en una nueva pestaña para que veamos que pinta tiene.</p>
+<p>En Excel o Google Sheets, los datos se almacenan en la hoja de
+cálculo y se organizan en celdas. En R, se almacenan en objetos. Cuando
+leemos un archivo csv, los datos van directo a un data.frame llamado
+<code>pinguinos</code> y están listos para ser utilizados. En la solapa
+“Environment” podemos ver el objeto <code>pinguinos</code>, y si hacemos
+clic en ese objeto los datos se abrirán en una nueva pestaña para que
+veamos que pinta tiene.</p>
 <p><img src="img/view_en_rstudio.png" alt="La pestaña de visualización del data.frame con los datos de pinguinos luego de llamar a la función View()" /></p>
-<p>Esta previsualización es lo más parecida a la que tenemos en una hoja de cálculo. Podemos llegar a este panel ejecutando <code>View(pinguinos)</code> en la consola. Hay otras funciones que nos sirven para visualizar nuestros datos. Vamos a utilizar una de ellas:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(pinguinos)</span></code></pre></div>
+<p>Esta previsualización es lo más parecida a la que tenemos en una hoja
+de cálculo. Podemos llegar a este panel ejecutando
+<code>View(pinguinos)</code> en la consola (Importante: R distingue
+mayúsculas de minísculas!). Hay otras funciones que nos sirven para
+visualizar nuestros datos. Vamos a utilizar una de ellas:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(pinguinos)</span></code></pre></div>
 <pre><code>## Rows: 344
 ## Columns: 8
 ## $ especie         &lt;chr&gt; &quot;Adelia&quot;, &quot;Adelia&quot;, &quot;Adelia&quot;, &quot;Adelia&quot;, &quot;Adelia&quot;, &quot;Ade…
@@ -441,23 +475,37 @@ $(document).ready(function () {
 ## $ masa_corporal_g &lt;dbl&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, 42…
 ## $ sexo            &lt;chr&gt; &quot;macho&quot;, &quot;hembra&quot;, &quot;hembra&quot;, NA, &quot;hembra&quot;, &quot;macho&quot;, &quot;h…
 ## $ anio            &lt;dbl&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, …</code></pre>
-<p>Esta salida es diferente y nos da información sobre el tipo de datos en cada columna (o variable).</p>
-<p>A veces nuestros datos no son tan amigables y necesitamos dar más información a la función para poder leer los datos correctamente. Puedes encontrar estas opciones buscando en la documentación de la función.</p>
+<p>Esta salida es diferente y nos da información sobre el tipo de datos
+en cada columna (o variable).</p>
+<p>A veces nuestros datos no son tan amigables y necesitamos dar más
+información a la función para poder leer los datos correctamente. Puedes
+encontrar estas opciones buscando en la documentación de la función.</p>
 <blockquote>
-<p>Escribe <code>?read_csv()</code> en la consola y revisa la documentación. ¿Cómo se llama la opción para cambiar el delimitador por defecto?</p>
+<p>Escribe <code>?read_csv()</code> en la consola y revisa la
+documentación. ¿Cómo se llama la opción para cambiar el delimitador por
+defecto?</p>
 </blockquote>
 </div>
 <div id="leyendo-archivos-xlsx" class="section level2">
 <h2>Leyendo archivos xlsx</h2>
-<p>¿Cómo podemos trabajar con archivos xlsx? Necesitaremos otro paquete de R, <strong>readxl</strong> que ya está instalado en el proyecto RStudio Cloud, solo necesitamos cargar la librería. En este caso la función se llama <code>read_excel()</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>penguinos_xls <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;datos/pinguinos.xlsx&quot;</span>)</span></code></pre></div>
-<p>Y listo, hemos leído un archivo xlsx. Por supuesto, a veces tenemos que trabajar con archivos con múltiples hojas o con datos que no están muy organizados. Esta función viene con varias opciones o argumentos para leer hojas específicas (<code>sheet = &lt;nombre de la hoja&gt;</code>) o un rango específico (<code>range</code> = “C1:E7”`) y otros.</p>
-<p>Ahora que tenemos los datos leídos en R, es el momento de analizar esos datos.</p>
+<p>¿Cómo podemos trabajar con archivos xlsx? Necesitaremos otro paquete
+de R, <strong>readxl</strong> que ya está instalado en el proyecto
+RStudio Cloud, solo necesitamos cargar la librería. En este caso la
+función se llama <code>read_excel()</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div>
+<pre><code>## Warning: package &#39;readxl&#39; was built under R version 4.2.3</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>penguinos_xls <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;datos/pinguinos.xlsx&quot;</span>)</span></code></pre></div>
+<p>Y listo, hemos leído un archivo xlsx. Por supuesto, a veces tenemos
+que trabajar con archivos con múltiples hojas o con datos que no están
+muy organizados. Esta función viene con varias opciones o argumentos
+para leer hojas específicas
+(<code>sheet = &lt;nombre de la hoja&gt;</code>) o un rango específico
+(<code>range</code> = “C1:E7”`) y otros.</p>
+<p>Ahora que tenemos los datos leídos en R, es el momento de analizar
+esos datos.</p>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGV5ZW5kbyBkYXRvcyIKb3V0cHV0OiAKICBodG1sX2RvY3VtZW50OgogICAgY29kZV9kb3dubG9hZDogdHJ1ZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IGZhbHNlCiAgICBoaWdobGlnaHQ6IHRhbmdvCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgojIyBTb2JyZSBsb3MgUGluZ8O8aW5vcyBkZSBQYWxtZXIKCkVzIGhvcmEgZGUgcHJlc2VudGFyIGVsIGNvbmp1bnRvIGRlIGRhdG9zIHF1ZSBlc3RhbW9zIHV0aWxpemFuZG8uIExvcyBkYXRvcyBkZSAqKlBpbmfDvGlub3MgZGUgUGFsbWVyKiogZnVlcm9uIHJlY29naWRvcyB5IHB1ZXN0b3MgYSBkaXNwb3NpY2nDs24gcG9yIGxhIERyYS4gS3Jpc3RlbiBHb3JtYW4geSBsYSBbRXN0YWNpw7NuIFBhbG1lciBlbiBsYSBBbnTDoXJ0aWRhLCBMVEVSXShodHRwczovL3BhbC5sdGVybmV0LmVkdS8pLCBxdWUgZXMgcGFydGUgZGUgbGEgUmVkIGRlIEludmVzdGlnYWNpw7NuIEVjb2zDs2dpY2EgYSBMYXJnbyBQbGF6by4gRWwgY29uanVudG8gZGUgZGF0b3MgaW5jbHV5ZSB2YXJpYXMgY2FyYWN0ZXLDrXN0aWNhcyBkZSBsb3MgcGluZ8O8aW5vcyBBZGVsaWEsIEJhcmJpam8geSBQYXDDumEuIFB1ZWRlcyBsZWVyIG3DoXMgc29icmUgZWxsbyBlbiBsYSBbZG9jdW1lbnRhY2nDs24gZGUgcGFsbWVycGVuZ3VpbnNdKGh0dHBzOi8vYWxsaXNvbmhvcnN0LmdpdGh1Yi5pby9wYWxtZXJwZW5ndWlucy8pLiAKCkVzdG9zIGRhdG9zIGVzdMOhbiBkaXNwb25pYmxlcyBlbiBSIGluc3RhbGFuZG8gZWwgcGFxdWV0ZSBwYWxtZXJwZW5ndWlucyAoZW4gaW5nbMOpcykgbyBlbCBwYXF1ZXRlIGRhdG9zIChlbiBlc3Bhw7FvbCksIHBlcm8gY29tbyBxdWVyZW1vcyBhcHJlbmRlciBhIGxlZXIgZGF0b3MgZW4gUiwgdmFtb3MgYSBsZWVybG9zIGRlc2RlIGFyY2hpdm9zIGNzdiB5IHhscy4KCiMjIExleWVuZG8gYXJjaGl2b3MgY3N2CgpFbXBlemFyZW1vcyBjYXJnYW5kbyBlbCBwYXF1ZXRlICoqdGlkeXZlcnNlKiosIHF1ZSBub3MgZGEgYWNjZXNvIGEgZG9jZW5hcyBkZSBwYXF1ZXRlcyB5IGZ1bmNpb25lcyBjb24gbGFzIHF1ZSB0cmFiYWphci4gUG9yIGFob3JhIHVzYXJlbW9zIGxhIGZ1bmNpw7NuIGByZWFkX2NzdigpYCBwYXJhIGxlZXIgdW4gYXJjaGl2byAuY3N2IHF1ZSBlc3TDoSBhbG1hY2VuYWRvIGVuIGVsIGRpcmVjdG9yaW8gZGUgZGF0b3MuIAoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlKQoKcGluZ3Vpbm9zIDwtIHJlYWRfY3N2KCJkYXRvcy9waW5ndWlub3MuY3N2IikKYGBgCgpFbiBFeGNlbCBvIEdvb2dsZSBTaGVldHMsIGxvcyBkYXRvcyBzZSBhbG1hY2VuYW4gZW4gbGEgaG9qYSBkZSBjw6FsY3VsbyB5IHNlIG9yZ2FuaXphbiBlbiBjZWxkYXMuIEVuIFIsIHNlIGFsbWFjZW5hbiBlbiBvYmpldG9zLiBDdWFuZG8gbGVlbW9zIHVuIGFyY2hpdm8gY3N2LCBsb3MgZGF0b3MgdmFuIGRpcmVjdG8gYSB1biBkYXRhLmZyYW1lIGxsYW1hZG8gYHBpbmd1aW5vc2AgeSBlc3TDoW4gbGlzdG9zIHBhcmEgc2VyIHV0aWxpemFkb3MuIEVuIGxhIHNvbGFwYSAiRW52aXJvbm1lbnQiIHBvZGVtb3MgdmVyIGVsIG9iamV0byBgcGluZ3Vpbm9zYCwgeSBzaSBoYWNlbW9zIGNsaWMgZW4gZXNlIG9iamV0byBsb3MgZGF0b3Mgc2UgYWJyaXLDoW4gZW4gdW5hIG51ZXZhIHBlc3Rhw7FhIHBhcmEgcXVlIHZlYW1vcyBxdWUgcGludGEgdGllbmUuIAoKCjxpbWcgc3JjPSJpbWcvdmlld19lbl9yc3R1ZGlvLnBuZyIgYWx0PSJMYSBwZXN0YcOxYSBkZSB2aXN1YWxpemFjacOzbiBkZWwgZGF0YS5mcmFtZSBjb24gbG9zIGRhdG9zIGRlIHBpbmd1aW5vcyBsdWVnbyBkZSBsbGFtYXIgYSBsYSBmdW5jacOzbiBWaWV3KCkiIC8+CgpFc3RhIHByZXZpc3VhbGl6YWNpw7NuIGVzIGxvIG3DoXMgcGFyZWNpZGEgYSBsYSBxdWUgdGVuZW1vcyBlbiB1bmEgaG9qYSBkZSBjw6FsY3Vsby4gUG9kZW1vcyBsbGVnYXIgYSBlc3RlIHBhbmVsIGVqZWN1dGFuZG8gYFZpZXcocGluZ3Vpbm9zKWAgZW4gbGEgY29uc29sYS4gSGF5IG90cmFzIGZ1bmNpb25lcyBxdWUgbm9zIHNpcnZlbiBwYXJhIHZpc3VhbGl6YXIgbnVlc3Ryb3MgZGF0b3MuICBWYW1vcyBhIHV0aWxpemFyIHVuYSBkZSBlbGxhczoKCmBgYHtyfQpnbGltcHNlKHBpbmd1aW5vcykKYGBgCgpFc3RhIHNhbGlkYSBlcyBkaWZlcmVudGUgeSBub3MgZGEgaW5mb3JtYWNpw7NuIHNvYnJlIGVsIHRpcG8gZGUgZGF0b3MgZW4gY2FkYSBjb2x1bW5hIChvIHZhcmlhYmxlKS4KCkEgdmVjZXMgbnVlc3Ryb3MgZGF0b3Mgbm8gc29uIHRhbiBhbWlnYWJsZXMgeSBuZWNlc2l0YW1vcyBkYXIgbcOhcyBpbmZvcm1hY2nDs24gYSBsYSBmdW5jacOzbiBwYXJhIHBvZGVyIGxlZXIgbG9zIGRhdG9zIGNvcnJlY3RhbWVudGUuIFB1ZWRlcyBlbmNvbnRyYXIgZXN0YXMgb3BjaW9uZXMgYnVzY2FuZG8gZW4gbGEgZG9jdW1lbnRhY2nDs24gZGUgbGEgZnVuY2nDs24uIAoKPiBFc2NyaWJlIGA/cmVhZF9jc3YoKWAgZW4gbGEgY29uc29sYSB5IHJldmlzYSBsYSBkb2N1bWVudGFjacOzbi4gwr9Dw7NtbyBzZSBsbGFtYSBsYSBvcGNpw7NuIHBhcmEgY2FtYmlhciBlbCBkZWxpbWl0YWRvciBwb3IgZGVmZWN0bz8KCiMjIExleWVuZG8gYXJjaGl2b3MgeGxzeAoKwr9Dw7NtbyBwb2RlbW9zIHRyYWJhamFyIGNvbiBhcmNoaXZvcyB4bHN4PyBOZWNlc2l0YXJlbW9zIG90cm8gcGFxdWV0ZSBkZSBSLCAqKnJlYWR4bCoqIHF1ZSB5YSBlc3TDoSBpbnN0YWxhZG8gZW4gZWwgcHJveWVjdG8gUlN0dWRpbyBDbG91ZCwgc29sbyBuZWNlc2l0YW1vcyBjYXJnYXIgbGEgbGlicmVyw61hLiBFbiBlc3RlIGNhc28gbGEgZnVuY2nDs24gc2UgbGxhbWEgYHJlYWRfZXhjZWwoKWAuCgpgYGB7cn0KbGlicmFyeShyZWFkeGwpCgpwZW5ndWlub3NfeGxzIDwtIHJlYWRfZXhjZWwoImRhdG9zL3Bpbmd1aW5vcy54bHN4IikKYGBgCgpZIGxpc3RvLCBoZW1vcyBsZcOtZG8gdW4gYXJjaGl2byB4bHN4LiBQb3Igc3VwdWVzdG8sIGEgdmVjZXMgdGVuZW1vcyBxdWUgdHJhYmFqYXIgY29uIGFyY2hpdm9zIGNvbiBtw7psdGlwbGVzIGhvamFzIG8gY29uIGRhdG9zIHF1ZSBubyBlc3TDoW4gbXV5IG9yZ2FuaXphZG9zLiBFc3RhIGZ1bmNpw7NuIHZpZW5lIGNvbiB2YXJpYXMgb3BjaW9uZXMgbyBhcmd1bWVudG9zIHBhcmEgbGVlciBob2phcyBlc3BlY8OtZmljYXMgKGBzaGVldCA9IDxub21icmUgZGUgbGEgaG9qYT5gKSBvIHVuIHJhbmdvIGVzcGVjw61maWNvIChgcmFuZ2VgID0gIkMxOkU3ImApIHkgb3Ryb3MuIAoKQWhvcmEgcXVlIHRlbmVtb3MgbG9zIGRhdG9zIGxlw61kb3MgZW4gUiwgZXMgZWwgbW9tZW50byBkZSBhbmFsaXphciBlc29zIGRhdG9zLiAKCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxleWVuZG8gZGF0b3MiDQpvdXRwdXQ6IA0KICBodG1sX2RvY3VtZW50Og0KICAgIGNvZGVfZG93bmxvYWQ6IHRydWUNCiAgICB0b2M6IHRydWUNCiAgICB0b2NfZmxvYXQ6IGZhbHNlDQogICAgaGlnaGxpZ2h0OiB0YW5nbw0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQ0KYGBgDQoNCiMjIFNvYnJlIGxvcyBQaW5nw7xpbm9zIGRlIFBhbG1lcg0KDQpFcyBob3JhIGRlIHByZXNlbnRhciBlbCBjb25qdW50byBkZSBkYXRvcyBxdWUgZXN0YW1vcyB1dGlsaXphbmRvLiBMb3MgZGF0b3MgZGUgKipQaW5nw7xpbm9zIGRlIFBhbG1lcioqIGZ1ZXJvbiByZWNvZ2lkb3MgeSBwdWVzdG9zIGEgZGlzcG9zaWNpw7NuIHBvciBsYSBEcmEuIEtyaXN0ZW4gR29ybWFuIHkgbGEgW0VzdGFjacOzbiBQYWxtZXIgZW4gbGEgQW50w6FydGlkYSwgTFRFUl0oaHR0cHM6Ly9wYWwubHRlcm5ldC5lZHUvKSwgcXVlIGVzIHBhcnRlIGRlIGxhIFJlZCBkZSBJbnZlc3RpZ2FjacOzbiBFY29sw7NnaWNhIGEgTGFyZ28gUGxhem8uIEVsIGNvbmp1bnRvIGRlIGRhdG9zIGluY2x1eWUgdmFyaWFzIGNhcmFjdGVyw61zdGljYXMgZGUgbG9zIHBpbmfDvGlub3MgQWRlbGlhLCBCYXJiaWpvIHkgUGFww7phLiBQdWVkZXMgbGVlciBtw6FzIHNvYnJlIGVsbG8gZW4gbGEgW2RvY3VtZW50YWNpw7NuIGRlIHBhbG1lcnBlbmd1aW5zXShodHRwczovL2FsbGlzb25ob3JzdC5naXRodWIuaW8vcGFsbWVycGVuZ3VpbnMvKS4gDQoNCkVzdG9zIGRhdG9zIGVzdMOhbiBkaXNwb25pYmxlcyBlbiBSIGluc3RhbGFuZG8gZWwgcGFxdWV0ZSBwYWxtZXJwZW5ndWlucyAoZW4gaW5nbMOpcykgbyBlbCBwYXF1ZXRlIGRhdG9zIChlbiBlc3Bhw7FvbCksIHBlcm8gY29tbyBxdWVyZW1vcyBhcHJlbmRlciBhIGxlZXIgZGF0b3MgZW4gUiwgdmFtb3MgYSBsZWVybG9zIGRlc2RlIGFyY2hpdm9zIGNzdiB5IHhscy4NCg0KIyMgTGV5ZW5kbyBhcmNoaXZvcyBjc3YNCg0KRW1wZXphcmVtb3MgY2FyZ2FuZG8gZWwgcGFxdWV0ZSAqKnRpZHl2ZXJzZSoqLCBxdWUgbm9zIGRhIGFjY2VzbyBhIGRvY2VuYXMgZGUgcGFxdWV0ZXMgeSBmdW5jaW9uZXMgY29uIGxhcyBxdWUgdHJhYmFqYXIuIFBvciBhaG9yYSB1c2FyZW1vcyBsYSBmdW5jacOzbiBgcmVhZF9jc3YoKWAgcGFyYSBsZWVyIHVuIGFyY2hpdm8gLmNzdiBxdWUgZXN0w6EgYWxtYWNlbmFkbyBlbiBlbCBkaXJlY3RvcmlvIGRlIGRhdG9zLiANCg0KYGBge3Igd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQpwaW5ndWlub3MgPC0gcmVhZF9jc3YoImRhdG9zL3Bpbmd1aW5vcy5jc3YiKQ0KYGBgDQoNCkVuIEV4Y2VsIG8gR29vZ2xlIFNoZWV0cywgbG9zIGRhdG9zIHNlIGFsbWFjZW5hbiBlbiBsYSBob2phIGRlIGPDoWxjdWxvIHkgc2Ugb3JnYW5pemFuIGVuIGNlbGRhcy4gRW4gUiwgc2UgYWxtYWNlbmFuIGVuIG9iamV0b3MuIEN1YW5kbyBsZWVtb3MgdW4gYXJjaGl2byBjc3YsIGxvcyBkYXRvcyB2YW4gZGlyZWN0byBhIHVuIGRhdGEuZnJhbWUgbGxhbWFkbyBgcGluZ3Vpbm9zYCB5IGVzdMOhbiBsaXN0b3MgcGFyYSBzZXIgdXRpbGl6YWRvcy4gRW4gbGEgc29sYXBhICJFbnZpcm9ubWVudCIgcG9kZW1vcyB2ZXIgZWwgb2JqZXRvIGBwaW5ndWlub3NgLCB5IHNpIGhhY2Vtb3MgY2xpYyBlbiBlc2Ugb2JqZXRvIGxvcyBkYXRvcyBzZSBhYnJpcsOhbiBlbiB1bmEgbnVldmEgcGVzdGHDsWEgcGFyYSBxdWUgdmVhbW9zIHF1ZSBwaW50YSB0aWVuZS4gDQoNCg0KPGltZyBzcmM9ImltZy92aWV3X2VuX3JzdHVkaW8ucG5nIiBhbHQ9IkxhIHBlc3Rhw7FhIGRlIHZpc3VhbGl6YWNpw7NuIGRlbCBkYXRhLmZyYW1lIGNvbiBsb3MgZGF0b3MgZGUgcGluZ3Vpbm9zIGx1ZWdvIGRlIGxsYW1hciBhIGxhIGZ1bmNpw7NuIFZpZXcoKSIgLz4NCg0KRXN0YSBwcmV2aXN1YWxpemFjacOzbiBlcyBsbyBtw6FzIHBhcmVjaWRhIGEgbGEgcXVlIHRlbmVtb3MgZW4gdW5hIGhvamEgZGUgY8OhbGN1bG8uIFBvZGVtb3MgbGxlZ2FyIGEgZXN0ZSBwYW5lbCBlamVjdXRhbmRvIGBWaWV3KHBpbmd1aW5vcylgIGVuIGxhIGNvbnNvbGEgKEltcG9ydGFudGU6IFIgZGlzdGluZ3VlIG1hecO6c2N1bGFzIGRlIG1pbsOtc2N1bGFzISkuIEhheSBvdHJhcyBmdW5jaW9uZXMgcXVlIG5vcyBzaXJ2ZW4gcGFyYSB2aXN1YWxpemFyIG51ZXN0cm9zIGRhdG9zLiAgVmFtb3MgYSB1dGlsaXphciB1bmEgZGUgZWxsYXM6DQoNCmBgYHtyfQ0KZ2xpbXBzZShwaW5ndWlub3MpDQpgYGANCg0KRXN0YSBzYWxpZGEgZXMgZGlmZXJlbnRlIHkgbm9zIGRhIGluZm9ybWFjacOzbiBzb2JyZSBlbCB0aXBvIGRlIGRhdG9zIGVuIGNhZGEgY29sdW1uYSAobyB2YXJpYWJsZSkuDQoNCkEgdmVjZXMgbnVlc3Ryb3MgZGF0b3Mgbm8gc29uIHRhbiBhbWlnYWJsZXMgeSBuZWNlc2l0YW1vcyBkYXIgbcOhcyBpbmZvcm1hY2nDs24gYSBsYSBmdW5jacOzbiBwYXJhIHBvZGVyIGxlZXIgbG9zIGRhdG9zIGNvcnJlY3RhbWVudGUuIFB1ZWRlcyBlbmNvbnRyYXIgZXN0YXMgb3BjaW9uZXMgYnVzY2FuZG8gZW4gbGEgZG9jdW1lbnRhY2nDs24gZGUgbGEgZnVuY2nDs24uIA0KDQo+IEVzY3JpYmUgYD9yZWFkX2NzdigpYCBlbiBsYSBjb25zb2xhIHkgcmV2aXNhIGxhIGRvY3VtZW50YWNpw7NuLiDCv0PDs21vIHNlIGxsYW1hIGxhIG9wY2nDs24gcGFyYSBjYW1iaWFyIGVsIGRlbGltaXRhZG9yIHBvciBkZWZlY3RvPw0KDQojIyBMZXllbmRvIGFyY2hpdm9zIHhsc3gNCg0Kwr9Dw7NtbyBwb2RlbW9zIHRyYWJhamFyIGNvbiBhcmNoaXZvcyB4bHN4PyBOZWNlc2l0YXJlbW9zIG90cm8gcGFxdWV0ZSBkZSBSLCAqKnJlYWR4bCoqIHF1ZSB5YSBlc3TDoSBpbnN0YWxhZG8gZW4gZWwgcHJveWVjdG8gUlN0dWRpbyBDbG91ZCwgc29sbyBuZWNlc2l0YW1vcyBjYXJnYXIgbGEgbGlicmVyw61hLiBFbiBlc3RlIGNhc28gbGEgZnVuY2nDs24gc2UgbGxhbWEgYHJlYWRfZXhjZWwoKWAuDQoNCmBgYHtyfQ0KbGlicmFyeShyZWFkeGwpDQoNCnBlbmd1aW5vc194bHMgPC0gcmVhZF9leGNlbCgiZGF0b3MvcGluZ3Vpbm9zLnhsc3giKQ0KYGBgDQoNClkgbGlzdG8sIGhlbW9zIGxlw61kbyB1biBhcmNoaXZvIHhsc3guIFBvciBzdXB1ZXN0bywgYSB2ZWNlcyB0ZW5lbW9zIHF1ZSB0cmFiYWphciBjb24gYXJjaGl2b3MgY29uIG3Dumx0aXBsZXMgaG9qYXMgbyBjb24gZGF0b3MgcXVlIG5vIGVzdMOhbiBtdXkgb3JnYW5pemFkb3MuIEVzdGEgZnVuY2nDs24gdmllbmUgY29uIHZhcmlhcyBvcGNpb25lcyBvIGFyZ3VtZW50b3MgcGFyYSBsZWVyIGhvamFzIGVzcGVjw61maWNhcyAoYHNoZWV0ID0gPG5vbWJyZSBkZSBsYSBob2phPmApIG8gdW4gcmFuZ28gZXNwZWPDrWZpY28gKGByYW5nZWAgPSAiQzE6RTciYCkgeSBvdHJvcy4gDQoNCkFob3JhIHF1ZSB0ZW5lbW9zIGxvcyBkYXRvcyBsZcOtZG9zIGVuIFIsIGVzIGVsIG1vbWVudG8gZGUgYW5hbGl6YXIgZXNvcyBkYXRvcy4gDQoNCg==</div>
 
 
 

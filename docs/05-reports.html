@@ -13,7 +13,7 @@
 
 <title>Informes de tu trabajo</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -124,13 +124,20 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -231,11 +238,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -264,8 +275,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -273,16 +284,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -395,53 +399,101 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#control-del-código">Control del código</a></li>
-<li><a href="#automatización">Automatización</a></li>
+<li><a href="#control-del-código" id="toc-control-del-código">Control
+del código</a></li>
+<li><a href="#automatización"
+id="toc-automatización">Automatización</a></li>
 </ul>
 </div>
 
-<p>El primer ejemplo de informe que vimos se convirtió en un archivo html. Pero ¿qué pasa con los archivos Word o PDF, que pueden ser más útiles o esperados en algunas situaciones? RMarkdown, y todo un ecosistema de otros paquetes, permite generar documentos en múltiples formatos utilizando el mismo archivo de texto plano.</p>
-<p>La forma de generar el formato del archivo de salida es cambiando la opción <code>output</code> de la cabecera.</p>
+<p>El primer ejemplo de informe que vimos se convirtió en un archivo
+html. Pero ¿qué pasa con los archivos Word o PDF, que pueden ser más
+útiles o esperados en algunas situaciones? RMarkdown, y todo un
+ecosistema de otros paquetes, permite generar documentos en múltiples
+formatos utilizando el mismo archivo de texto plano.</p>
+<p>La forma de generar el formato del archivo de salida es cambiando la
+opción <code>output</code> de la cabecera.</p>
 <blockquote>
-<p>Vuelve al informe de ejemplo y busca la línea que empieza por <code>output:</code>. Cambia <code>html_document</code> por <code>pdf_document</code>.</p>
+<p>Vuelve al informe de ejemplo y busca la línea que empieza por
+<code>output:</code>. Cambia <code>html_document</code> por
+<code>pdf_document</code>.</p>
 </blockquote>
-<p>También podes usar el botón “knit”, haciendo clic en la flechita de la derecha para ver todas las opciones.</p>
+<p>También podes usar el botón “knit”, haciendo clic en la flechita de
+la derecha para ver todas las opciones.</p>
 <blockquote>
-<p>Ahora utiliza el botón para generar un documento de Word. ¿Qué cambios ves en el encabezado del archivo?</p>
+<p>Ahora utiliza el botón para generar un documento de Word. ¿Qué
+cambios ves en el encabezado del archivo?</p>
 </blockquote>
 <div id="control-del-código" class="section level2">
 <h2>Control del código</h2>
-<p>Nuestro ejemplo parece bastante ordenado. Hemos ocultado todo el código y los mensajes de R para que puedas concentrar tu atención en la tabla y las figuras. Pero este no es el comportamiento por defecto de un archivo Rmd. Por lo general, la salida tendrá tanto el código como su resultado, lo cual está bien cuando vos o la persona que leerá el informe quiere ver el código que genera esos resultados, pero podría no ser lo que la audiencia final del informe podría necesitar. Es usted quien decide si quiere mostrar el código o no.</p>
-<p>Para cambiar las opciones de un chunk de código, todo lo que tiene que hacer es enumerar las opciones dentro de los corchetes. Por ejemplo:</p>
+<p>Nuestro ejemplo parece bastante ordenado. Hemos ocultado todo el
+código y los mensajes de R para que puedas concentrar tu atención en la
+tabla y las figuras. Pero este no es el comportamiento por defecto de un
+archivo Rmd. Por lo general, la salida tendrá tanto el código como su
+resultado, lo cual está bien cuando vos o la persona que leerá el
+informe quiere ver el código que genera esos resultados, pero podría no
+ser lo que la audiencia final del informe podría necesitar. Es usted
+quien decide si quiere mostrar el código o no.</p>
+<p>Para cambiar las opciones de un chunk de código, todo lo que tiene
+que hacer es enumerar las opciones dentro de los corchetes. Por
+ejemplo:</p>
 <pre><code>```{r nombre-del-chunk, echo = FALSE, message = FALSE}
 
 ```</code></pre>
-<p>Un conjunto de opciones particularmente importante son las que controlan si el código se ejecuta y si el resultado del código permanecerá en el informe o no:</p>
+<p>Un conjunto de opciones particularmente importante son las que
+controlan si el código se ejecuta y si el resultado del código
+permanecerá en el informe o no:</p>
 <ul>
-<li><p><code>eval = FALSE</code> impide que se ejecute el código del chunk, por lo que tampoco mostrará los resultados. Es útil para mostrar código de ejemplo si estás escribiendo, por ejemplo, un documento para enseñar R.</p></li>
-<li><p><code>echo = FALSE</code> ejecuta el código del chunk y muestra los resultados, pero oculta el código en el informe. Esto es útil para escribir informes para personas que no necesitan ver el código R que generó el gráfico o la tabla.</p></li>
-<li><p><code>include = FALSE</code> ejecuta el código pero oculta tanto el código como los resultados. Es útil para configuración general donde se cargan bibliotecas.</p></li>
+<li><p><code>eval = FALSE</code> impide que se ejecute el código del
+chunk, por lo que tampoco mostrará los resultados. Es útil para mostrar
+código de ejemplo si estás escribiendo, por ejemplo, un documento para
+enseñar R.</p></li>
+<li><p><code>echo = FALSE</code> ejecuta el código del chunk y muestra
+los resultados, pero oculta el código en el informe. Esto es útil para
+escribir informes para personas que no necesitan ver el código R que
+generó el gráfico o la tabla.</p></li>
+<li><p><code>include = FALSE</code> ejecuta el código pero oculta tanto
+el código como los resultados. Es útil para configuración general donde
+se cargan bibliotecas.</p></li>
 </ul>
-<p>Si estás escribiendo un informe en el que no quieres que se muestre ningún código, añadir <code>echo = FALSE</code> a cada nuevo chunk se vuelve tedioso. La solución es cambiar la opción globalmente para que se aplique a todos los chunks. Esto se hace con la función <code>knitr::opts_chunk$set()</code>, que establece las opciones globales de los chunks que le siguen. Encontrarás esta función en el primer chunk “setup”.</p>
+<p>Si estás escribiendo un informe en el que no quieres que se muestre
+ningún código, añadir <code>echo = FALSE</code> a cada nuevo chunk se
+vuelve tedioso. La solución es cambiar la opción globalmente para que se
+aplique a todos los chunks. Esto se hace con la función
+<code>knitr::opts_chunk$set()</code>, que establece las opciones
+globales de los chunks que le siguen. Encontrarás esta función en el
+primer chunk “setup”.</p>
 <pre><code>```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                   message = FALSE,
                   warning = FALSE)
 ```</code></pre>
 <blockquote>
-<p>¿Tienes curiosidad por saber cómo funcionan las opciones? Cámbialas de una en una y toca el archivo cada vez para ver qué cambia.</p>
+<p>¿Tienes curiosidad por saber cómo funcionan las opciones? Cámbialas
+de una en una y toca el archivo cada vez para ver qué cambia.</p>
 </blockquote>
 </div>
 <div id="automatización" class="section level2">
 <h2>Automatización</h2>
-<p>Al principio de este taller te pedimos que cambiaras la especie de pingüino en el informe de ejemplo. La tarea no fue fácil porque “Papua” aparece varias veces y es fácil equivocarse. Parametrizar un informe nos permite definir ese tipo de parámetros en un solo lugar y obtener diferentes análisis a partir del mismo archivo.</p>
-<p>Para generar un informe parametrizado hay que añadir un elemento llamado <code>params</code> a la cabecera con la lista de parámetros y sus valores por defecto.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<p>Al principio de este taller te pedimos que cambiaras la especie de
+pingüino en el informe de ejemplo. La tarea no fue fácil porque “Papua”
+aparece varias veces y es fácil equivocarse. Parametrizar un informe nos
+permite definir ese tipo de parámetros en un solo lugar y obtener
+diferentes análisis a partir del mismo archivo.</p>
+<p>Para generar un informe parametrizado hay que añadir un elemento
+llamado <code>params</code> a la cabecera con la lista de parámetros y
+sus valores por defecto.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">especie</span><span class="kw">:</span><span class="at"> Papúa</span></span></code></pre></div>
-<p>A partir de ahora, tendrás acceso a una variable llamada <code>params</code> que es una lista que contiene los parámetros y su valor. Para acceder al valor de cada parámetro se utiliza el operador <code>$</code> de la siguiente manera:</p>
+<p>A partir de ahora, tendrás acceso a una variable llamada
+<code>params</code> que es una lista que contiene los parámetros y su
+valor. Para acceder al valor de cada parámetro se utiliza el operador
+<code>$</code> de la siguiente manera:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>params<span class="sc">$</span>especie</span></code></pre></div>
 <pre><code>## [1] &quot;Papúa&quot;</code></pre>
-<p>De este modo, el código original puede modificarse para utilizar el valor de la especie almacenada en <code>params$especie</code>.</p>
+<p>De este modo, el código original puede modificarse para utilizar el
+valor de la especie almacenada en <code>params$especie</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(especie <span class="sc">==</span> params<span class="sc">$</span>especie) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> largo_pico_mm, <span class="at">y =</span> alto_pico_mm)) <span class="sc">+</span></span>
@@ -455,14 +507,18 @@ knitr::opts_chunk$set(echo = FALSE,
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Largo del pico (mm)&quot;</span>,</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Alto del pico (mm)&quot;</span>,</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Especie de Pingüino&quot;</span>) </span></code></pre></div>
-<p>Aquí cambiamos el subtítulo para concatenar palabras con el valor almacenado en <code>params$especie</code>, de esta manera podemos construir el subtítulo de forma progamática.</p>
-<p>Ahora el informe está listo para funcionar como un informe parametrizado.</p>
+<p>Aquí cambiamos el subtítulo para concatenar palabras con el valor
+almacenado en <code>params$especie</code>, de esta manera podemos
+construir el subtítulo de forma progamática.</p>
+<p>Ahora el informe está listo para funcionar como un informe
+parametrizado.</p>
 <blockquote>
-<p>Por último, cambia “Papúa” en el yaml para generar un nuevo informe para una de las otras especies.</p>
+<p>Por último, cambia “Papúa” en el yaml para generar un nuevo informe
+para una de las otras especies.</p>
 </blockquote>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiSW5mb3JtZXMgZGUgdHUgdHJhYmFqbyIKb3V0cHV0OiAKICBodG1sX2RvY3VtZW50OgogICAgY29kZV9kb3dubG9hZDogdHJ1ZQogICAgdG9jOiB0cnVlCiAgICB0b2NfZmxvYXQ6IGZhbHNlCiAgICBoaWdobGlnaHQ6IHRhbmdvCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKCmNodW5rIDwtICJgYGAiCmBgYAoKCkVsIHByaW1lciBlamVtcGxvIGRlIGluZm9ybWUgcXVlIHZpbW9zIHNlIGNvbnZpcnRpw7MgZW4gdW4gYXJjaGl2byBodG1sLiBQZXJvIMK/cXXDqSBwYXNhIGNvbiBsb3MgYXJjaGl2b3MgV29yZCBvIFBERiwgcXVlIHB1ZWRlbiBzZXIgbcOhcyDDunRpbGVzIG8gZXNwZXJhZG9zIGVuIGFsZ3VuYXMgc2l0dWFjaW9uZXM/IFJNYXJrZG93biwgeSB0b2RvIHVuIGVjb3Npc3RlbWEgZGUgb3Ryb3MgcGFxdWV0ZXMsIHBlcm1pdGUgZ2VuZXJhciBkb2N1bWVudG9zIGVuIG3Dumx0aXBsZXMgZm9ybWF0b3MgdXRpbGl6YW5kbyBlbCBtaXNtbyBhcmNoaXZvIGRlIHRleHRvIHBsYW5vLgoKTGEgZm9ybWEgZGUgZ2VuZXJhciBlbCBmb3JtYXRvIGRlbCBhcmNoaXZvIGRlIHNhbGlkYSBlcyBjYW1iaWFuZG8gbGEgb3BjacOzbiBgb3V0cHV0YCBkZSBsYSBjYWJlY2VyYS4KCj4gVnVlbHZlIGFsIGluZm9ybWUgZGUgZWplbXBsbyB5IGJ1c2NhIGxhIGzDrW5lYSBxdWUgZW1waWV6YSBwb3IgYG91dHB1dDpgLiBDYW1iaWEgYGh0bWxfZG9jdW1lbnRgIHBvciBgcGRmX2RvY3VtZW50YC4KClRhbWJpw6luIHBvZGVzIHVzYXIgZWwgYm90w7NuICJrbml0IiwgaGFjaWVuZG8gY2xpYyBlbiBsYSBmbGVjaGl0YSBkZSBsYSBkZXJlY2hhIHBhcmEgdmVyIHRvZGFzIGxhcyBvcGNpb25lcy4gCgo+IEFob3JhIHV0aWxpemEgZWwgYm90w7NuIHBhcmEgZ2VuZXJhciB1biBkb2N1bWVudG8gZGUgV29yZC4gwr9RdcOpIGNhbWJpb3MgdmVzIGVuIGVsIGVuY2FiZXphZG8gZGVsIGFyY2hpdm8/CgojIyBDb250cm9sIGRlbCBjw7NkaWdvCgpOdWVzdHJvIGVqZW1wbG8gcGFyZWNlIGJhc3RhbnRlIG9yZGVuYWRvLiBIZW1vcyBvY3VsdGFkbyB0b2RvIGVsIGPDs2RpZ28geSBsb3MgbWVuc2FqZXMgZGUgUiBwYXJhIHF1ZSBwdWVkYXMgY29uY2VudHJhciB0dSBhdGVuY2nDs24gZW4gbGEgdGFibGEgeSBsYXMgZmlndXJhcy4gUGVybyBlc3RlIG5vIGVzIGVsIGNvbXBvcnRhbWllbnRvIHBvciBkZWZlY3RvIGRlIHVuIGFyY2hpdm8gUm1kLiBQb3IgbG8gZ2VuZXJhbCwgbGEgc2FsaWRhIHRlbmRyw6EgdGFudG8gZWwgY8OzZGlnbyBjb21vIHN1IHJlc3VsdGFkbywgbG8gY3VhbCBlc3TDoSBiaWVuIGN1YW5kbyB2b3MgbyBsYSBwZXJzb25hIHF1ZSBsZWVyw6EgZWwgaW5mb3JtZSBxdWllcmUgdmVyIGVsIGPDs2RpZ28gcXVlIGdlbmVyYSBlc29zIHJlc3VsdGFkb3MsIHBlcm8gcG9kcsOtYSBubyBzZXIgbG8gcXVlIGxhIGF1ZGllbmNpYSBmaW5hbCBkZWwgaW5mb3JtZSBwb2Ryw61hIG5lY2VzaXRhci4gRXMgdXN0ZWQgcXVpZW4gZGVjaWRlIHNpIHF1aWVyZSBtb3N0cmFyIGVsIGPDs2RpZ28gbyBuby4gCgpQYXJhIGNhbWJpYXIgbGFzIG9wY2lvbmVzIGRlIHVuIGNodW5rIGRlIGPDs2RpZ28sIHRvZG8gbG8gcXVlIHRpZW5lIHF1ZSBoYWNlciBlcyBlbnVtZXJhciBsYXMgb3BjaW9uZXMgZGVudHJvIGRlIGxvcyBjb3JjaGV0ZXMuIFBvciBlamVtcGxvOgoKICAgIGByIGNodW5rYHtyIG5vbWJyZS1kZWwtY2h1bmssIGVjaG8gPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFfQogICAgCiAgICBgciBjaHVua2AKClVuIGNvbmp1bnRvIGRlIG9wY2lvbmVzIHBhcnRpY3VsYXJtZW50ZSBpbXBvcnRhbnRlIHNvbiBsYXMgcXVlIGNvbnRyb2xhbiBzaSBlbCBjw7NkaWdvIHNlIGVqZWN1dGEgeSBzaSBlbCByZXN1bHRhZG8gZGVsIGPDs2RpZ28gcGVybWFuZWNlcsOhIGVuIGVsIGluZm9ybWUgbyBubzoKCiogYGV2YWwgPSBGQUxTRWAgaW1waWRlIHF1ZSBzZSBlamVjdXRlIGVsIGPDs2RpZ28gZGVsIGNodW5rLCBwb3IgbG8gcXVlIHRhbXBvY28gbW9zdHJhcsOhIGxvcyByZXN1bHRhZG9zLiBFcyDDunRpbCBwYXJhIG1vc3RyYXIgY8OzZGlnbyBkZSBlamVtcGxvIHNpIGVzdMOhcyBlc2NyaWJpZW5kbywgcG9yIGVqZW1wbG8sIHVuIGRvY3VtZW50byBwYXJhIGVuc2XDsWFyIFIuCgoqIGBlY2hvID0gRkFMU0VgIGVqZWN1dGEgZWwgY8OzZGlnbyBkZWwgY2h1bmsgeSBtdWVzdHJhIGxvcyByZXN1bHRhZG9zLCBwZXJvIG9jdWx0YSBlbCBjw7NkaWdvIGVuIGVsIGluZm9ybWUuIEVzdG8gZXMgw7p0aWwgcGFyYSBlc2NyaWJpciBpbmZvcm1lcyBwYXJhIHBlcnNvbmFzIHF1ZSBubyBuZWNlc2l0YW4gdmVyIGVsIGPDs2RpZ28gUiBxdWUgZ2VuZXLDsyBlbCBncsOhZmljbyBvIGxhIHRhYmxhLgoKKiBgaW5jbHVkZSA9IEZBTFNFYCBlamVjdXRhIGVsIGPDs2RpZ28gcGVybyBvY3VsdGEgdGFudG8gZWwgY8OzZGlnbyBjb21vIGxvcyByZXN1bHRhZG9zLiBFcyDDunRpbCBwYXJhIGNvbmZpZ3VyYWNpw7NuIGdlbmVyYWwgZG9uZGUgc2UgY2FyZ2FuIGJpYmxpb3RlY2FzLgoKU2kgZXN0w6FzIGVzY3JpYmllbmRvIHVuIGluZm9ybWUgZW4gZWwgcXVlIG5vIHF1aWVyZXMgcXVlIHNlIG11ZXN0cmUgbmluZ8O6biBjw7NkaWdvLCBhw7FhZGlyIGBlY2hvID0gRkFMU0VgIGEgY2FkYSBudWV2byBjaHVuayBzZSB2dWVsdmUgdGVkaW9zby4gTGEgc29sdWNpw7NuIGVzIGNhbWJpYXIgbGEgb3BjacOzbiBnbG9iYWxtZW50ZSBwYXJhIHF1ZSBzZSBhcGxpcXVlIGEgdG9kb3MgbG9zIGNodW5rcy4gRXN0byBzZSBoYWNlIGNvbiBsYSBmdW5jacOzbiBga25pdHI6Om9wdHNfY2h1bmskc2V0KClgLCBxdWUgZXN0YWJsZWNlIGxhcyBvcGNpb25lcyBnbG9iYWxlcyBkZSBsb3MgY2h1bmtzIHF1ZSBsZSBzaWd1ZW4uIEVuY29udHJhcsOhcyBlc3RhIGZ1bmNpw7NuIGVuIGVsIHByaW1lciBjaHVuayAic2V0dXAiLgoKICAgIGByIGNodW5rYHtyIHNldHVwLCBpbmNsdWRlID0gRkFMU0V9CiAgICBrbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IEZBTFNFLCAKICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2UgPSBGQUxTRSwKICAgICAgICAgICAgICAgICAgICAgIHdhcm5pbmcgPSBGQUxTRSkKICAgIGByIGNodW5rYAogICAgCj4gwr9UaWVuZXMgY3VyaW9zaWRhZCBwb3Igc2FiZXIgY8OzbW8gZnVuY2lvbmFuIGxhcyBvcGNpb25lcz8gQ8OhbWJpYWxhcyBkZSB1bmEgZW4gdW5hIHkgdG9jYSBlbCBhcmNoaXZvIGNhZGEgdmV6IHBhcmEgdmVyIHF1w6kgY2FtYmlhLgoKCiMjIEF1dG9tYXRpemFjacOzbgoKQWwgcHJpbmNpcGlvIGRlIGVzdGUgdGFsbGVyIHRlIHBlZGltb3MgcXVlIGNhbWJpYXJhcyBsYSBlc3BlY2llIGRlIHBpbmfDvGlubyBlbiBlbCBpbmZvcm1lIGRlIGVqZW1wbG8uIExhIHRhcmVhIG5vIGZ1ZSBmw6FjaWwgcG9ycXVlICJQYXB1YSIgYXBhcmVjZSB2YXJpYXMgdmVjZXMgeSBlcyBmw6FjaWwgZXF1aXZvY2Fyc2UuIFBhcmFtZXRyaXphciB1biBpbmZvcm1lIG5vcyBwZXJtaXRlIGRlZmluaXIgZXNlIHRpcG8gZGUgcGFyw6FtZXRyb3MgZW4gdW4gc29sbyBsdWdhciB5IG9idGVuZXIgZGlmZXJlbnRlcyBhbsOhbGlzaXMgYSBwYXJ0aXIgZGVsIG1pc21vIGFyY2hpdm8uIAoKUGFyYSBnZW5lcmFyIHVuIGluZm9ybWUgcGFyYW1ldHJpemFkbyBoYXkgcXVlIGHDsWFkaXIgdW4gZWxlbWVudG8gbGxhbWFkbyBgcGFyYW1zYCBhIGxhIGNhYmVjZXJhIGNvbiBsYSBsaXN0YSBkZSBwYXLDoW1ldHJvcyB5IHN1cyB2YWxvcmVzIHBvciBkZWZlY3RvLgoKYGBgeWFtbApwYXJhbXM6CiAgZXNwZWNpZTogUGFww7phCmBgYAoKYGBge3IsIGluY2x1ZGU9RkFMU0V9CnBhcmFtcyA8LSBsaXN0KGVzcGVjaWUgPSAiUGFww7phIikKYGBgCgpBIHBhcnRpciBkZSBhaG9yYSwgdGVuZHLDoXMgYWNjZXNvIGEgdW5hIHZhcmlhYmxlIGxsYW1hZGEgYHBhcmFtc2AgcXVlIGVzIHVuYSBsaXN0YSBxdWUgY29udGllbmUgbG9zIHBhcsOhbWV0cm9zIHkgc3UgdmFsb3IuIFBhcmEgYWNjZWRlciBhbCB2YWxvciBkZSBjYWRhIHBhcsOhbWV0cm8gc2UgdXRpbGl6YSBlbCBvcGVyYWRvciBgJGAgZGUgbGEgc2lndWllbnRlIG1hbmVyYToKCmBgYHtyfQpwYXJhbXMkZXNwZWNpZQpgYGAKCkRlIGVzdGUgbW9kbywgZWwgY8OzZGlnbyBvcmlnaW5hbCBwdWVkZSBtb2RpZmljYXJzZSBwYXJhIHV0aWxpemFyIGVsIHZhbG9yIGRlIGxhIGVzcGVjaWUgYWxtYWNlbmFkYSBlbiBgcGFyYW1zJGVzcGVjaWVgLgoKYGBge3IgZXZhbD1GQUxTRX0KcGluZ3Vpbm9zICU+JSAKICBmaWx0ZXIoZXNwZWNpZSA9PSBwYXJhbXMkZXNwZWNpZSkgJT4lIAogIGdncGxvdChhZXMoeCA9IGxhcmdvX3BpY29fbW0sIHkgPSBhbHRvX3BpY29fbW0pKSArCiAgZ2VvbV9wb2ludChjb2xvciA9ICJkYXJrb3JhbmdlIiwKICAgICAgICAgICAgIHNpemUgPSAzLAogICAgICAgICAgICAgYWxwaGEgPSAwLjgpICsKICBnZW9tX3Ntb290aChtZXRob2QgPSAibG0iLCBzZSA9IEZBTFNFLCBjb2xvciA9ICJkYXJrb3JhbmdlIikgKwogIHRoZW1lX21pbmltYWwoKSArCiAgbGFicyh0aXRsZSA9ICJEaW1lbnNpb25lcyBkZWwgcGluZ8O8aW5vIiwKICAgICAgIHN1YnRpdGxlID0gcGFzdGUoIkxvbmdpdHVkIHkgcHJvZnVuZGlkYWQgcGFyYSBsb3MgcGluZ8O8aW5vcyIsIHBhcmFtcyRlc3BlY2llLCAiZW4gUGFsbWVyIFN0YXRpb24gTFRFUiIpLAogICAgICAgeCA9ICJMYXJnbyBkZWwgcGljbyAobW0pIiwKICAgICAgIHkgPSAiQWx0byBkZWwgcGljbyAobW0pIiwKICAgICAgIGNvbG9yID0gIkVzcGVjaWUgZGUgUGluZ8O8aW5vIikgCmBgYAoKQXF1w60gY2FtYmlhbW9zIGVsIHN1YnTDrXR1bG8gcGFyYSBjb25jYXRlbmFyIHBhbGFicmFzIGNvbiBlbCB2YWxvciBhbG1hY2VuYWRvIGVuIGBwYXJhbXMkZXNwZWNpZWAsIGRlIGVzdGEgbWFuZXJhIHBvZGVtb3MgY29uc3RydWlyIGVsIHN1YnTDrXR1bG8gZGUgZm9ybWEgcHJvZ2Ftw6F0aWNhLgoKQWhvcmEgZWwgaW5mb3JtZSBlc3TDoSBsaXN0byBwYXJhIGZ1bmNpb25hciBjb21vIHVuIGluZm9ybWUgcGFyYW1ldHJpemFkby4KCj4gUG9yIMO6bHRpbW8sIGNhbWJpYSAiUGFww7phIiBlbiBlbCB5YW1sIHBhcmEgZ2VuZXJhciB1biBudWV2byBpbmZvcm1lIHBhcmEgdW5hIGRlIGxhcyBvdHJhcyBlc3BlY2llcy4g</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkluZm9ybWVzIGRlIHR1IHRyYWJham8iDQpvdXRwdXQ6IA0KICBodG1sX2RvY3VtZW50Og0KICAgIGNvZGVfZG93bmxvYWQ6IHRydWUNCiAgICB0b2M6IHRydWUNCiAgICB0b2NfZmxvYXQ6IGZhbHNlDQogICAgaGlnaGxpZ2h0OiB0YW5nbw0KLS0tDQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQ0KDQpjaHVuayA8LSAiYGBgIg0KYGBgDQoNCg0KRWwgcHJpbWVyIGVqZW1wbG8gZGUgaW5mb3JtZSBxdWUgdmltb3Mgc2UgY29udmlydGnDsyBlbiB1biBhcmNoaXZvIGh0bWwuIFBlcm8gwr9xdcOpIHBhc2EgY29uIGxvcyBhcmNoaXZvcyBXb3JkIG8gUERGLCBxdWUgcHVlZGVuIHNlciBtw6FzIMO6dGlsZXMgbyBlc3BlcmFkb3MgZW4gYWxndW5hcyBzaXR1YWNpb25lcz8gUk1hcmtkb3duLCB5IHRvZG8gdW4gZWNvc2lzdGVtYSBkZSBvdHJvcyBwYXF1ZXRlcywgcGVybWl0ZSBnZW5lcmFyIGRvY3VtZW50b3MgZW4gbcO6bHRpcGxlcyBmb3JtYXRvcyB1dGlsaXphbmRvIGVsIG1pc21vIGFyY2hpdm8gZGUgdGV4dG8gcGxhbm8uDQoNCkxhIGZvcm1hIGRlIGdlbmVyYXIgZWwgZm9ybWF0byBkZWwgYXJjaGl2byBkZSBzYWxpZGEgZXMgY2FtYmlhbmRvIGxhIG9wY2nDs24gYG91dHB1dGAgZGUgbGEgY2FiZWNlcmEuDQoNCj4gVnVlbHZlIGFsIGluZm9ybWUgZGUgZWplbXBsbyB5IGJ1c2NhIGxhIGzDrW5lYSBxdWUgZW1waWV6YSBwb3IgYG91dHB1dDpgLiBDYW1iaWEgYGh0bWxfZG9jdW1lbnRgIHBvciBgcGRmX2RvY3VtZW50YC4NCg0KVGFtYmnDqW4gcG9kZXMgdXNhciBlbCBib3TDs24gImtuaXQiLCBoYWNpZW5kbyBjbGljIGVuIGxhIGZsZWNoaXRhIGRlIGxhIGRlcmVjaGEgcGFyYSB2ZXIgdG9kYXMgbGFzIG9wY2lvbmVzLiANCg0KPiBBaG9yYSB1dGlsaXphIGVsIGJvdMOzbiBwYXJhIGdlbmVyYXIgdW4gZG9jdW1lbnRvIGRlIFdvcmQuIMK/UXXDqSBjYW1iaW9zIHZlcyBlbiBlbCBlbmNhYmV6YWRvIGRlbCBhcmNoaXZvPw0KDQojIyBDb250cm9sIGRlbCBjw7NkaWdvDQoNCk51ZXN0cm8gZWplbXBsbyBwYXJlY2UgYmFzdGFudGUgb3JkZW5hZG8uIEhlbW9zIG9jdWx0YWRvIHRvZG8gZWwgY8OzZGlnbyB5IGxvcyBtZW5zYWplcyBkZSBSIHBhcmEgcXVlIHB1ZWRhcyBjb25jZW50cmFyIHR1IGF0ZW5jacOzbiBlbiBsYSB0YWJsYSB5IGxhcyBmaWd1cmFzLiBQZXJvIGVzdGUgbm8gZXMgZWwgY29tcG9ydGFtaWVudG8gcG9yIGRlZmVjdG8gZGUgdW4gYXJjaGl2byBSbWQuIFBvciBsbyBnZW5lcmFsLCBsYSBzYWxpZGEgdGVuZHLDoSB0YW50byBlbCBjw7NkaWdvIGNvbW8gc3UgcmVzdWx0YWRvLCBsbyBjdWFsIGVzdMOhIGJpZW4gY3VhbmRvIHZvcyBvIGxhIHBlcnNvbmEgcXVlIGxlZXLDoSBlbCBpbmZvcm1lIHF1aWVyZSB2ZXIgZWwgY8OzZGlnbyBxdWUgZ2VuZXJhIGVzb3MgcmVzdWx0YWRvcywgcGVybyBwb2Ryw61hIG5vIHNlciBsbyBxdWUgbGEgYXVkaWVuY2lhIGZpbmFsIGRlbCBpbmZvcm1lIHBvZHLDrWEgbmVjZXNpdGFyLiBFcyB1c3RlZCBxdWllbiBkZWNpZGUgc2kgcXVpZXJlIG1vc3RyYXIgZWwgY8OzZGlnbyBvIG5vLiANCg0KUGFyYSBjYW1iaWFyIGxhcyBvcGNpb25lcyBkZSB1biBjaHVuayBkZSBjw7NkaWdvLCB0b2RvIGxvIHF1ZSB0aWVuZSBxdWUgaGFjZXIgZXMgZW51bWVyYXIgbGFzIG9wY2lvbmVzIGRlbnRybyBkZSBsb3MgY29yY2hldGVzLiBQb3IgZWplbXBsbzoNCg0KICAgIGByIGNodW5rYHtyIG5vbWJyZS1kZWwtY2h1bmssIGVjaG8gPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFfQ0KICAgIA0KICAgIGByIGNodW5rYA0KDQpVbiBjb25qdW50byBkZSBvcGNpb25lcyBwYXJ0aWN1bGFybWVudGUgaW1wb3J0YW50ZSBzb24gbGFzIHF1ZSBjb250cm9sYW4gc2kgZWwgY8OzZGlnbyBzZSBlamVjdXRhIHkgc2kgZWwgcmVzdWx0YWRvIGRlbCBjw7NkaWdvIHBlcm1hbmVjZXLDoSBlbiBlbCBpbmZvcm1lIG8gbm86DQoNCiogYGV2YWwgPSBGQUxTRWAgaW1waWRlIHF1ZSBzZSBlamVjdXRlIGVsIGPDs2RpZ28gZGVsIGNodW5rLCBwb3IgbG8gcXVlIHRhbXBvY28gbW9zdHJhcsOhIGxvcyByZXN1bHRhZG9zLiBFcyDDunRpbCBwYXJhIG1vc3RyYXIgY8OzZGlnbyBkZSBlamVtcGxvIHNpIGVzdMOhcyBlc2NyaWJpZW5kbywgcG9yIGVqZW1wbG8sIHVuIGRvY3VtZW50byBwYXJhIGVuc2XDsWFyIFIuDQoNCiogYGVjaG8gPSBGQUxTRWAgZWplY3V0YSBlbCBjw7NkaWdvIGRlbCBjaHVuayB5IG11ZXN0cmEgbG9zIHJlc3VsdGFkb3MsIHBlcm8gb2N1bHRhIGVsIGPDs2RpZ28gZW4gZWwgaW5mb3JtZS4gRXN0byBlcyDDunRpbCBwYXJhIGVzY3JpYmlyIGluZm9ybWVzIHBhcmEgcGVyc29uYXMgcXVlIG5vIG5lY2VzaXRhbiB2ZXIgZWwgY8OzZGlnbyBSIHF1ZSBnZW5lcsOzIGVsIGdyw6FmaWNvIG8gbGEgdGFibGEuDQoNCiogYGluY2x1ZGUgPSBGQUxTRWAgZWplY3V0YSBlbCBjw7NkaWdvIHBlcm8gb2N1bHRhIHRhbnRvIGVsIGPDs2RpZ28gY29tbyBsb3MgcmVzdWx0YWRvcy4gRXMgw7p0aWwgcGFyYSBjb25maWd1cmFjacOzbiBnZW5lcmFsIGRvbmRlIHNlIGNhcmdhbiBiaWJsaW90ZWNhcy4NCg0KU2kgZXN0w6FzIGVzY3JpYmllbmRvIHVuIGluZm9ybWUgZW4gZWwgcXVlIG5vIHF1aWVyZXMgcXVlIHNlIG11ZXN0cmUgbmluZ8O6biBjw7NkaWdvLCBhw7FhZGlyIGBlY2hvID0gRkFMU0VgIGEgY2FkYSBudWV2byBjaHVuayBzZSB2dWVsdmUgdGVkaW9zby4gTGEgc29sdWNpw7NuIGVzIGNhbWJpYXIgbGEgb3BjacOzbiBnbG9iYWxtZW50ZSBwYXJhIHF1ZSBzZSBhcGxpcXVlIGEgdG9kb3MgbG9zIGNodW5rcy4gRXN0byBzZSBoYWNlIGNvbiBsYSBmdW5jacOzbiBga25pdHI6Om9wdHNfY2h1bmskc2V0KClgLCBxdWUgZXN0YWJsZWNlIGxhcyBvcGNpb25lcyBnbG9iYWxlcyBkZSBsb3MgY2h1bmtzIHF1ZSBsZSBzaWd1ZW4uIEVuY29udHJhcsOhcyBlc3RhIGZ1bmNpw7NuIGVuIGVsIHByaW1lciBjaHVuayAic2V0dXAiLg0KDQogICAgYHIgY2h1bmtge3Igc2V0dXAsIGluY2x1ZGUgPSBGQUxTRX0NCiAgICBrbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IEZBTFNFLCANCiAgICAgICAgICAgICAgICAgICAgICBtZXNzYWdlID0gRkFMU0UsDQogICAgICAgICAgICAgICAgICAgICAgd2FybmluZyA9IEZBTFNFKQ0KICAgIGByIGNodW5rYA0KICAgIA0KPiDCv1RpZW5lcyBjdXJpb3NpZGFkIHBvciBzYWJlciBjw7NtbyBmdW5jaW9uYW4gbGFzIG9wY2lvbmVzPyBDw6FtYmlhbGFzIGRlIHVuYSBlbiB1bmEgeSB0b2NhIGVsIGFyY2hpdm8gY2FkYSB2ZXogcGFyYSB2ZXIgcXXDqSBjYW1iaWEuDQoNCg0KIyMgQXV0b21hdGl6YWNpw7NuDQoNCkFsIHByaW5jaXBpbyBkZSBlc3RlIHRhbGxlciB0ZSBwZWRpbW9zIHF1ZSBjYW1iaWFyYXMgbGEgZXNwZWNpZSBkZSBwaW5nw7xpbm8gZW4gZWwgaW5mb3JtZSBkZSBlamVtcGxvLiBMYSB0YXJlYSBubyBmdWUgZsOhY2lsIHBvcnF1ZSAiUGFwdWEiIGFwYXJlY2UgdmFyaWFzIHZlY2VzIHkgZXMgZsOhY2lsIGVxdWl2b2NhcnNlLiBQYXJhbWV0cml6YXIgdW4gaW5mb3JtZSBub3MgcGVybWl0ZSBkZWZpbmlyIGVzZSB0aXBvIGRlIHBhcsOhbWV0cm9zIGVuIHVuIHNvbG8gbHVnYXIgeSBvYnRlbmVyIGRpZmVyZW50ZXMgYW7DoWxpc2lzIGEgcGFydGlyIGRlbCBtaXNtbyBhcmNoaXZvLiANCg0KUGFyYSBnZW5lcmFyIHVuIGluZm9ybWUgcGFyYW1ldHJpemFkbyBoYXkgcXVlIGHDsWFkaXIgdW4gZWxlbWVudG8gbGxhbWFkbyBgcGFyYW1zYCBhIGxhIGNhYmVjZXJhIGNvbiBsYSBsaXN0YSBkZSBwYXLDoW1ldHJvcyB5IHN1cyB2YWxvcmVzIHBvciBkZWZlY3RvLg0KDQpgYGB5YW1sDQpwYXJhbXM6DQogIGVzcGVjaWU6IFBhcMO6YQ0KYGBgDQoNCmBgYHtyLCBpbmNsdWRlPUZBTFNFfQ0KcGFyYW1zIDwtIGxpc3QoZXNwZWNpZSA9ICJQYXDDumEiKQ0KYGBgDQoNCkEgcGFydGlyIGRlIGFob3JhLCB0ZW5kcsOhcyBhY2Nlc28gYSB1bmEgdmFyaWFibGUgbGxhbWFkYSBgcGFyYW1zYCBxdWUgZXMgdW5hIGxpc3RhIHF1ZSBjb250aWVuZSBsb3MgcGFyw6FtZXRyb3MgeSBzdSB2YWxvci4gUGFyYSBhY2NlZGVyIGFsIHZhbG9yIGRlIGNhZGEgcGFyw6FtZXRybyBzZSB1dGlsaXphIGVsIG9wZXJhZG9yIGAkYCBkZSBsYSBzaWd1aWVudGUgbWFuZXJhOg0KDQpgYGB7cn0NCnBhcmFtcyRlc3BlY2llDQpgYGANCg0KRGUgZXN0ZSBtb2RvLCBlbCBjw7NkaWdvIG9yaWdpbmFsIHB1ZWRlIG1vZGlmaWNhcnNlIHBhcmEgdXRpbGl6YXIgZWwgdmFsb3IgZGUgbGEgZXNwZWNpZSBhbG1hY2VuYWRhIGVuIGBwYXJhbXMkZXNwZWNpZWAuDQoNCmBgYHtyIGV2YWw9RkFMU0V9DQpwaW5ndWlub3MgJT4lIA0KICBmaWx0ZXIoZXNwZWNpZSA9PSBwYXJhbXMkZXNwZWNpZSkgJT4lIA0KICBnZ3Bsb3QoYWVzKHggPSBsYXJnb19waWNvX21tLCB5ID0gYWx0b19waWNvX21tKSkgKw0KICBnZW9tX3BvaW50KGNvbG9yID0gImRhcmtvcmFuZ2UiLA0KICAgICAgICAgICAgIHNpemUgPSAzLA0KICAgICAgICAgICAgIGFscGhhID0gMC44KSArDQogIGdlb21fc21vb3RoKG1ldGhvZCA9ICJsbSIsIHNlID0gRkFMU0UsIGNvbG9yID0gImRhcmtvcmFuZ2UiKSArDQogIHRoZW1lX21pbmltYWwoKSArDQogIGxhYnModGl0bGUgPSAiRGltZW5zaW9uZXMgZGVsIHBpbmfDvGlubyIsDQogICAgICAgc3VidGl0bGUgPSBwYXN0ZSgiTG9uZ2l0dWQgeSBwcm9mdW5kaWRhZCBwYXJhIGxvcyBwaW5nw7xpbm9zIiwgcGFyYW1zJGVzcGVjaWUsICJlbiBQYWxtZXIgU3RhdGlvbiBMVEVSIiksDQogICAgICAgeCA9ICJMYXJnbyBkZWwgcGljbyAobW0pIiwNCiAgICAgICB5ID0gIkFsdG8gZGVsIHBpY28gKG1tKSIsDQogICAgICAgY29sb3IgPSAiRXNwZWNpZSBkZSBQaW5nw7xpbm8iKSANCmBgYA0KDQpBcXXDrSBjYW1iaWFtb3MgZWwgc3VidMOtdHVsbyBwYXJhIGNvbmNhdGVuYXIgcGFsYWJyYXMgY29uIGVsIHZhbG9yIGFsbWFjZW5hZG8gZW4gYHBhcmFtcyRlc3BlY2llYCwgZGUgZXN0YSBtYW5lcmEgcG9kZW1vcyBjb25zdHJ1aXIgZWwgc3VidMOtdHVsbyBkZSBmb3JtYSBwcm9nYW3DoXRpY2EuDQoNCkFob3JhIGVsIGluZm9ybWUgZXN0w6EgbGlzdG8gcGFyYSBmdW5jaW9uYXIgY29tbyB1biBpbmZvcm1lIHBhcmFtZXRyaXphZG8uDQoNCj4gUG9yIMO6bHRpbW8sIGNhbWJpYSAiUGFww7phIiBlbiBlbCB5YW1sIHBhcmEgZ2VuZXJhciB1biBudWV2byBpbmZvcm1lIHBhcmEgdW5hIGRlIGxhcyBvdHJhcyBlc3BlY2llcy4g</div>
 
 
 

@@ -13,7 +13,7 @@
 
 <title>Bienvenides</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -145,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -178,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -187,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -452,29 +449,27 @@ trabajo</a></td>
 <h3>¿Quienes somos?</h3>
 <p><strong>Yanina Bellini Saibene</strong></p>
 <p><img src="img/yani_circle.png" alt="Foto de Yani" width="100" height="100" align="left" style="margin:10px"/></p>
-<p>Yanina Bellini Saibene. Investigadora en el Instituto Nacional de
-Tecnología Agropecuaria (INTA, Argentina). Aplica sus conocimientos de
-informática y ciencia de datos para llevar los desarrollos tecnológicos
-a las regiones rurales y desatendidas de Argentina. También desarrolla
-software para apoyar la investigación y la educación. Es profesora de
-grado y posgrado en varias universidades de Argentina y Uruguay,
-enseñando Ciencia de Datos aplicada y desarrollando cursos abiertos y
-tutoriales para enseñar habilidades técnicas en el manejo de datos. Es
-formadora, instructora y miembro del Executive Council de <a
+<p>Yanina Bellini Saibene. Es la Community Manager de <a
+href="https://ropensci.org/">rOpenSci</a>. También desarrolla software
+para apoyar la investigación y la educación. Es profesora de grado y
+posgrado en varias universidades de Argentina y Uruguay, enseñando
+Ciencia de Datos aplicada y desarrollando cursos abiertos y tutoriales
+para enseñar habilidades técnicas en el manejo de datos. Es formadora,
+instructora y miembro del Executive Council de <a
 href="https://carpentries.org/">The Carpentries</a> e instructora
 certificada de <a
 href="https://education.rstudio.com/trainers/people/bellini_saibene+yanina/">RStudio</a>.
-Es cofundadora de <a href="http://metadocencia.org/">MetaDocencia</a>.
 Forma parte del equipo de R-Ladies Global y RForwards. También lidera y
 participa en la traducción comunitaria de material educativo y técnico
-al español, como Teaching Tech Together, R4DS, y The Carpentries
-Lessons.</p>
+al español, como Teaching Tech Together, R4DS, y lecciones de The
+Carpentries.</p>
 <p><a href="https://yabellini.netlify.com/">yabellini.netlify.com</a> |
-<a href="https://twitter.com/yabellini">@yabellini</a></p>
+<a href="https://fosstodon.org/@yabellini">fosstodon.org/<span
+class="citation">@yabellini</span></a></p>
 <p><strong>Pao Corrales</strong></p>
 <p><img src="img/pao_circle.png" alt="Foto de Pao" width="100" height="100" align="left" style="margin:10px"/>
-Paola Corrales. Es estudiante de doctorado en la Universidad de Buenos
-Aires. Estudia ciencias de la atmósfera aplicando técnicas de
+Paola Corrales. Está finalizando su doctorado en la Universidad de
+Buenos Aires. Estudia ciencias de la atmósfera aplicando técnicas de
 asimilación de datos para mejorar los pronósticos a corto plazo de
 eventos severos en Argentina. Es trainer e instructora de <a
 href="https://carpentries.org/">The Carpentries</a> e instructora
@@ -486,19 +481,12 @@ Ciencia, una organización sin ánimo de lucro con sede en Argentina,
 donde dirige proyectos educativos como campamentos y talleres de ciencia
 para estudiantes y profesores de ciencias de primaria y secundaria. Es
 profesora de la Licenciatura y la diplomatura en Ciencias de Datos de la
-Universidad Guillermo Brown. Es cofundadora de <a
-href="http://metadocencia.org/">MetaDocencia</a>. También desarrolla
-materiales de licencia abierta para enseñar y aprender R desde cero.</p>
+Universidad Guillermo Brown. También desarrolla materiales de licencia
+abierta para enseñar y aprender R como “De hojas de cálculo a R”, “R
+para clima” y “Reproducibility with R”.</p>
 <p><a href="https://github.com/paocorrales">paobcorrales.github.io</a> |
-<a href="https://twitter.com/PaobCorrales">@paobcorrales</a></p>
-<p><img src="img/hex_metadocencia.png" alt="Logo Metadocencia" width="100" height="110" align="left" style="margin:10px"/>
-Yani y Pao forman parte de MetaDocencia, una organización sin fines de
-lucro que nutre a una comunidad de educadores y educadoras de habla
-hispana mediante la enseñanza de métodos educativos concretos, basados
-en la evidencia y centrados en los y las estudiantes. MetaDocencia
-desarrolla en colaboración recursos abiertos, reutilizables y accesibles
-para fomentar prácticas de formación eficaces.</p>
-<p><a href="https://www.metadocencia.org/">MetaDocencia.org</a></p>
+<a href="https://fosstodon.org/@paocorrales">fosstodon.org/<span
+class="citation">@paocorrales</span></a></p>
 <hr />
 <div id="licencia" class="section level4">
 <h4>Licencia</h4>

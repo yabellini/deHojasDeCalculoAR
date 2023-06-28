@@ -13,7 +13,7 @@
 
 <title>Manipulando datos</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -124,13 +124,20 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -231,11 +238,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -264,8 +275,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -273,16 +284,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -395,18 +399,30 @@ $(document).ready(function () {
 
 <div id="TOC">
 <ul>
-<li><a href="#creando-tablas-de-resumen">Creando tablas de resumen</a></li>
-<li><a href="#dándole-formato-a-la-tabla">Dándole formato a la tabla</a></li>
-<li><a href="#creando-nuevas-variables">Creando nuevas variables</a></li>
-<li><a href="#filtrando-los-datos">Filtrando los datos</a></li>
+<li><a href="#creando-tablas-de-resumen"
+id="toc-creando-tablas-de-resumen">Creando tablas de resumen</a></li>
+<li><a href="#dándole-formato-a-la-tabla"
+id="toc-dándole-formato-a-la-tabla">Dándole formato a la tabla</a></li>
+<li><a href="#creando-nuevas-variables"
+id="toc-creando-nuevas-variables">Creando nuevas variables</a></li>
+<li><a href="#filtrando-los-datos"
+id="toc-filtrando-los-datos">Filtrando los datos</a></li>
 </ul>
 </div>
 
 <div id="creando-tablas-de-resumen" class="section level2">
 <h2>Creando tablas de resumen</h2>
-<p>En una hoja de cálculo, las tablas dinámicas o pivot tables son potentes herramientas para resumir los datos de diferentes maneras. Podemos crear estas tablas utilizando las funciones <code>group_by</code> y <code>summarize</code> del paquete dplyr.</p>
-<p>Echemos un vistazo a nuestro informe, justo después de leer los datos, creamos una tabla de resumen con el número de casos y la masa corporal media de cada especie de nuestro conjunto de datos.</p>
-<p>Podemos utilizar <code>group_by()</code> para agrupar nuestros datos por <strong>especie</strong> y <code>summarize()</code> para calcular el número de casos y la <strong>masa_corporal_g</strong> media para cada grupo.</p>
+<p>En una hoja de cálculo, las tablas dinámicas o pivot tables son
+potentes herramientas para resumir los datos de diferentes maneras.
+Podemos crear estas tablas utilizando las funciones
+<code>group_by</code> y <code>summarize</code> del paquete dplyr.</p>
+<p>Echemos un vistazo a nuestro informe, justo después de leer los
+datos, creamos una tabla de resumen con el número de casos y la masa
+corporal media de cada especie de nuestro conjunto de datos.</p>
+<p>Podemos utilizar <code>group_by()</code> para agrupar nuestros datos
+por <strong>especie</strong> y <code>summarize()</code> para calcular el
+número de casos y la <strong>masa_corporal_g</strong> media para cada
+grupo.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
@@ -417,9 +433,13 @@ $(document).ready(function () {
 ## 1 Adelia    152               3701.
 ## 2 Barbijo    68               3733.
 ## 3 Papúa     124               5076.</code></pre>
-<p>La función <code>n()</code> devuelve el número de casos y la función <code>mean</code> calcula la media o promedio. El parámetro <code>na.rm = TRUE</code> indica a la función que elimine los valores faltantes (<code>NA</code>) antes de realizar el cálculo.</p>
+<p>La función <code>n()</code> devuelve el número de casos y la función
+<code>mean</code> calcula la media o promedio. El parámetro
+<code>na.rm = TRUE</code> indica a la función que elimine los valores
+faltantes (<code>NA</code>) antes de realizar el cálculo.</p>
 <blockquote>
-<p>Pregunta: ¿Qué pasa si no se utiliza <code>group_by()</code> antes de <code>summarise()</code>? Probémoslo y discutamos lo que ocurre.</p>
+<p>Pregunta: ¿Qué pasa si no se utiliza <code>group_by()</code> antes de
+<code>summarise()</code>? Probémoslo y discutamos lo que ocurre.</p>
 </blockquote>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
@@ -428,8 +448,12 @@ $(document).ready(function () {
 ##   count masa_corporal_media
 ##   &lt;int&gt;               &lt;dbl&gt;
 ## 1   344               4202.</code></pre>
-<p>Así que si no agrupamos por la especie primero, obtendremos una sola estadística de resumen (n y media en este caso) para todo el conjunto de datos.</p>
-<p>Ahora, queremos la media de la masa corporal en kilogramos y con dos decimales. Podemos cambiar nuestra llamada a <code>summarise()</code> para obtener ese cálculo.</p>
+<p>Así que si no agrupamos por la especie primero, obtendremos una sola
+estadística de resumen (n y media en este caso) para todo el conjunto de
+datos.</p>
+<p>Ahora, queremos la media de la masa corporal en kilogramos y con dos
+decimales. Podemos cambiar nuestra llamada a <code>summarise()</code>
+para obtener ese cálculo.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
@@ -440,9 +464,14 @@ $(document).ready(function () {
 ## 1 Adelia    152                3.7 
 ## 2 Barbijo    68                3.73
 ## 3 Papúa     124                5.08</code></pre>
-<p>Primero dividimos la masa corporal por 1000 para transformarla de gramos a kilogramos y luego utilizamos la función <code>round()</code> para redondear a sólo dos decimales.</p>
-<p>Ahora estamos en el punto en el que queremos guardar esta información resumida como una variable para poder utilizarla en posteriores análisis y formatos.</p>
-<p>Así que vamos a añadir una asignación de variable a esa primera línea:</p>
+<p>Primero dividimos la masa corporal por 1000 para transformarla de
+gramos a kilogramos y luego utilizamos la función <code>round()</code>
+para redondear a sólo dos decimales.</p>
+<p>Ahora estamos en el punto en el que queremos guardar esta información
+resumida como una variable para poder utilizarla en posteriores análisis
+y formatos.</p>
+<p>Así que vamos a añadir una asignación de variable a esa primera
+línea:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>resumen <span class="ot">&lt;-</span> pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
@@ -450,7 +479,11 @@ $(document).ready(function () {
 </div>
 <div id="dándole-formato-a-la-tabla" class="section level2">
 <h2>Dándole formato a la tabla</h2>
-<p>Para que nuestra tabla se vea mejor en un informe, tenemos que cambiar algunos de sus elementos. Por ejemplo, el nombre de las variables debe ser informativo para una persona (de momento son nombres útiles para una computadora), y podemos añadirle un título y cambiar la alineación de los números.</p>
+<p>Para que nuestra tabla se vea mejor en un informe, tenemos que
+cambiar algunos de sus elementos. Por ejemplo, el nombre de las
+variables debe ser informativo para una persona (de momento son nombres
+útiles para una computadora), y podemos añadirle un título y cambiar la
+alineación de los números.</p>
 <p>Podemos hacerlo con la función <code>kable</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>resumen <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;Especie&quot;</span>, <span class="st">&quot;Cantidad&quot;</span>, <span class="st">&quot;Masa corporal media&quot;</span>),</span>
@@ -483,12 +516,17 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
-<p>Podemos hacer mucho más con otras funciones (o “verbos”) de dplyr. Veamos algunos más.</p>
+<p>Podemos hacer mucho más con otras funciones (o “verbos”) de dplyr.
+Veamos algunos más.</p>
 </div>
 <div id="creando-nuevas-variables" class="section level2">
 <h2>Creando nuevas variables</h2>
-<p>Muchas veces querremos trabajar con información que se deriva de los datos originales. Esto se suele hacer añadiendo una nueva columna. Lo hacemos con la función <code>mutate()</code>.</p>
-<p>Podemos añadir una nueva variable (llamada <code>prop</code>) que represente la proporción de pingüinos en cada <strong>especie</strong> con el uso de <code>mutate()</code>.</p>
+<p>Muchas veces querremos trabajar con información que se deriva de los
+datos originales. Esto se suele hacer añadiendo una nueva columna. Lo
+hacemos con la función <code>mutate()</code>.</p>
+<p>Podemos añadir una nueva variable (llamada <code>prop</code>) que
+represente la proporción de pingüinos en cada <strong>especie</strong>
+con el uso de <code>mutate()</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(especie) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
@@ -503,8 +541,17 @@ $(document).ready(function () {
 </div>
 <div id="filtrando-los-datos" class="section level2">
 <h2>Filtrando los datos</h2>
-<p>En nuestro informe también realizamos un gráfico por especies. Para ello necesitamos mantener sólo los datos de la especie que queremos analizar. Utilizamos la función <code>filter()</code> para filtrar filas de un data.frame, esta función devuelve un nuevo data.frame con sólo las filas que satisfacen algunas condiciones.</p>
-<p>Podemos utilizar operadores lógicos (<code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code>) para crear condiciones a partir de variables numéricas. Estos operadores también son útiles para fechas y cadenas de texto. El siguiente código aplica una condición (que sea igual a) para datos de tipo texto (la columna especie).</p>
+<p>En nuestro informe también realizamos un gráfico por especies. Para
+ello necesitamos mantener sólo los datos de la especie que queremos
+analizar. Utilizamos la función <code>filter()</code> para filtrar filas
+de un data.frame, esta función devuelve un nuevo data.frame con sólo las
+filas que satisfacen algunas condiciones.</p>
+<p>Podemos utilizar operadores lógicos (<code>&gt;</code>,
+<code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>,
+<code>==</code>) para crear condiciones a partir de variables numéricas.
+Estos operadores también son útiles para fechas y cadenas de texto. El
+siguiente código aplica una condición (que sea igual a) para datos de
+tipo texto (la columna especie).</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pinguinos <span class="sc">%&gt;%</span> </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(especie <span class="sc">==</span> <span class="st">&quot;Papúa&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 124 × 8
@@ -520,16 +567,19 @@ $(document).ready(function () {
 ##  8 Papúa   Bisc…          46.7         15.3            219            5200 macho
 ##  9 Papúa   Bisc…          43.3         13.4            209            4400 hemb…
 ## 10 Papúa   Bisc…          46.8         15.4            215            5150 macho
-## # … with 114 more rows, and 1 more variable: anio &lt;dbl&gt;</code></pre>
+## # ℹ 114 more rows
+## # ℹ 1 more variable: anio &lt;dbl&gt;</code></pre>
 <blockquote>
-<p>Actividad: Escribe el código necesario para filtrar todos los pingüinos de la isla Torgersen.</p>
+<p>Actividad: Escribe el código necesario para filtrar todos los
+pingüinos de la isla Torgersen.</p>
 </blockquote>
 <blockquote>
-<p>Actividad: Ahora escribe el código para filtrar todos los pingüinos con longitud de aleta mayor a 200.</p>
+<p>Actividad: Ahora escribe el código para filtrar todos los pingüinos
+con longitud de aleta mayor a 200.</p>
 </blockquote>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTWFuaXB1bGFuZG8gZGF0b3MiCm91dHB1dDogCiAgaHRtbF9kb2N1bWVudDoKICAgIGNvZGVfZG93bmxvYWQ6IHRydWUKICAgIHRvYzogdHJ1ZQogICAgdG9jX2Zsb2F0OiBmYWxzZQogICAgaGlnaGxpZ2h0OiB0YW5nbwotLS0KCmBgYHtyIHNldHVwLCBpbmNsdWRlPUZBTFNFfQprbml0cjo6b3B0c19jaHVuayRzZXQoCgllY2hvID0gVFJVRSwKCW1lc3NhZ2UgPSBGQUxTRSwKCXdhcm5pbmcgPSBGQUxTRQopCgpsaWJyYXJ5KHRpZHl2ZXJzZSkKcGluZ3Vpbm9zIDwtIHJlYWRfY3N2KCJkYXRvcy9waW5ndWlub3MuY3N2IikKYGBgCgojIyBDcmVhbmRvIHRhYmxhcyBkZSByZXN1bWVuCgpFbiB1bmEgaG9qYSBkZSBjw6FsY3VsbywgbGFzIHRhYmxhcyBkaW7DoW1pY2FzIG8gcGl2b3QgdGFibGVzIHNvbiBwb3RlbnRlcyBoZXJyYW1pZW50YXMgcGFyYSByZXN1bWlyIGxvcyBkYXRvcyBkZSBkaWZlcmVudGVzIG1hbmVyYXMuIFBvZGVtb3MgY3JlYXIgZXN0YXMgdGFibGFzIHV0aWxpemFuZG8gbGFzIGZ1bmNpb25lcyBgZ3JvdXBfYnlgIHkgYHN1bW1hcml6ZWAgZGVsIHBhcXVldGUgZHBseXIuIAoKRWNoZW1vcyB1biB2aXN0YXpvIGEgbnVlc3RybyBpbmZvcm1lLCBqdXN0byBkZXNwdcOpcyBkZSBsZWVyIGxvcyBkYXRvcywgY3JlYW1vcyB1bmEgdGFibGEgZGUgcmVzdW1lbiBjb24gZWwgbsO6bWVybyBkZSBjYXNvcyB5IGxhIG1hc2EgY29ycG9yYWwgbWVkaWEgZGUgY2FkYSBlc3BlY2llIGRlIG51ZXN0cm8gY29uanVudG8gZGUgZGF0b3MuCgpQb2RlbW9zIHV0aWxpemFyIGBncm91cF9ieSgpYCBwYXJhIGFncnVwYXIgbnVlc3Ryb3MgZGF0b3MgcG9yICoqZXNwZWNpZSoqIHkgYHN1bW1hcml6ZSgpYCBwYXJhIGNhbGN1bGFyIGVsIG7Dum1lcm8gZGUgY2Fzb3MgeSBsYSAqKm1hc2FfY29ycG9yYWxfZyoqIG1lZGlhIHBhcmEgY2FkYSBncnVwby4KCmBgYHtyfQoKcGluZ3Vpbm9zICU+JSAKICBncm91cF9ieShlc3BlY2llKSAlPiUgCiAgc3VtbWFyaXNlKGNvdW50ID0gbigpLAogICAgICAgICAgICBtYXNhX2NvcnBvcmFsX21lZGlhID0gbWVhbihtYXNhX2NvcnBvcmFsX2csIG5hLnJtID0gVFJVRSkpCgpgYGAKCkxhIGZ1bmNpw7NuIGBuKClgIGRldnVlbHZlIGVsIG7Dum1lcm8gZGUgY2Fzb3MgeSBsYSBmdW5jacOzbiBgbWVhbmAgY2FsY3VsYSBsYSBtZWRpYSBvIHByb21lZGlvLiBFbCBwYXLDoW1ldHJvIGBuYS5ybSA9IFRSVUVgIGluZGljYSBhIGxhIGZ1bmNpw7NuIHF1ZSBlbGltaW5lIGxvcyB2YWxvcmVzIGZhbHRhbnRlcyAoYE5BYCkgYW50ZXMgZGUgcmVhbGl6YXIgZWwgY8OhbGN1bG8uCgo+IFByZWd1bnRhOiDCv1F1w6kgcGFzYSBzaSBubyBzZSB1dGlsaXphIGBncm91cF9ieSgpYCBhbnRlcyBkZSBgc3VtbWFyaXNlKClgPyBQcm9iw6ltb3NsbyB5IGRpc2N1dGFtb3MgbG8gcXVlIG9jdXJyZS4KCmBgYHtyfQpwaW5ndWlub3MgJT4lIAogIHN1bW1hcmlzZShjb3VudCA9IG4oKSwKICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IG1lYW4obWFzYV9jb3Jwb3JhbF9nLCBuYS5ybSA9IFRSVUUpKQpgYGAKCkFzw60gcXVlIHNpIG5vIGFncnVwYW1vcyBwb3IgbGEgZXNwZWNpZSBwcmltZXJvLCBvYnRlbmRyZW1vcyB1bmEgc29sYSBlc3RhZMOtc3RpY2EgZGUgcmVzdW1lbiAobiB5IG1lZGlhIGVuIGVzdGUgY2FzbykgcGFyYSB0b2RvIGVsIGNvbmp1bnRvIGRlIGRhdG9zLgoKQWhvcmEsIHF1ZXJlbW9zIGxhIG1lZGlhIGRlIGxhIG1hc2EgY29ycG9yYWwgZW4ga2lsb2dyYW1vcyB5IGNvbiBkb3MgZGVjaW1hbGVzLiBQb2RlbW9zIGNhbWJpYXIgbnVlc3RyYSBsbGFtYWRhIGEgYHN1bW1hcmlzZSgpYCBwYXJhIG9idGVuZXIgZXNlIGPDoWxjdWxvLiAgCgpgYGB7cn0KcGluZ3Vpbm9zICU+JSAKICBncm91cF9ieShlc3BlY2llKSAlPiUgCiAgc3VtbWFyaXNlKGNvdW50ID0gbigpLAogICAgICAgICAgICBtYXNhX2NvcnBvcmFsX21lZGlhID0gcm91bmQobWVhbihtYXNhX2NvcnBvcmFsX2cvMTAwMCwgbmEucm0gPSBUUlVFKSwgMikpCmBgYAoKUHJpbWVybyBkaXZpZGltb3MgbGEgbWFzYSBjb3Jwb3JhbCBwb3IgMTAwMCBwYXJhIHRyYW5zZm9ybWFybGEgZGUgZ3JhbW9zIGEga2lsb2dyYW1vcyB5IGx1ZWdvIHV0aWxpemFtb3MgbGEgZnVuY2nDs24gYHJvdW5kKClgIHBhcmEgcmVkb25kZWFyIGEgc8OzbG8gZG9zIGRlY2ltYWxlcy4KCkFob3JhIGVzdGFtb3MgZW4gZWwgcHVudG8gZW4gZWwgcXVlIHF1ZXJlbW9zIGd1YXJkYXIgZXN0YSBpbmZvcm1hY2nDs24gcmVzdW1pZGEgY29tbyB1bmEgdmFyaWFibGUgcGFyYSBwb2RlciB1dGlsaXphcmxhIGVuIHBvc3RlcmlvcmVzIGFuw6FsaXNpcyB5IGZvcm1hdG9zLgoKQXPDrSBxdWUgdmFtb3MgYSBhw7FhZGlyIHVuYSBhc2lnbmFjacOzbiBkZSB2YXJpYWJsZSBhIGVzYSBwcmltZXJhIGzDrW5lYToKCmBgYHtyfQpyZXN1bWVuIDwtIHBpbmd1aW5vcyAlPiUgCiAgZ3JvdXBfYnkoZXNwZWNpZSkgJT4lIAogIHN1bW1hcmlzZShjb3VudCA9IG4oKSwKICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IHJvdW5kKG1lYW4obWFzYV9jb3Jwb3JhbF9nLzEwMDAsIG5hLnJtID0gVFJVRSksIDIpKQpgYGAKCiMjIETDoW5kb2xlIGZvcm1hdG8gYSBsYSB0YWJsYQoKUGFyYSBxdWUgbnVlc3RyYSB0YWJsYSBzZSB2ZWEgbWVqb3IgZW4gdW4gaW5mb3JtZSwgdGVuZW1vcyBxdWUgY2FtYmlhciBhbGd1bm9zIGRlIHN1cyBlbGVtZW50b3MuIFBvciBlamVtcGxvLCBlbCBub21icmUgZGUgbGFzIHZhcmlhYmxlcyBkZWJlIHNlciBpbmZvcm1hdGl2byBwYXJhIHVuYSBwZXJzb25hIChkZSBtb21lbnRvIHNvbiBub21icmVzIMO6dGlsZXMgcGFyYSB1bmEgY29tcHV0YWRvcmEpLCB5IHBvZGVtb3MgYcOxYWRpcmxlIHVuIHTDrXR1bG8geSBjYW1iaWFyIGxhIGFsaW5lYWNpw7NuIGRlIGxvcyBuw7ptZXJvcy4KClBvZGVtb3MgaGFjZXJsbyBjb24gbGEgZnVuY2nDs24gYGthYmxlYC4KCmBgYHtyfQpyZXN1bWVuICU+JSAKICBrbml0cjo6a2FibGUoY29sLm5hbWVzID0gYygiRXNwZWNpZSIsICJDYW50aWRhZCIsICJNYXNhIGNvcnBvcmFsIG1lZGlhIiksCiAgICAgICAgICAgICAgIGFsaWduID0gImxjYyIsCiAgICAgICAgICAgICAgIGNhcHRpb24gPSAiUmVzdW1lbiBkZSBsb3MgcGluZ8O8aW5vcyBlbiBlbCBkYXRhc2V0IHBvciBlc3BlY2llLiIpCmBgYAoKUG9kZW1vcyBoYWNlciBtdWNobyBtw6FzIGNvbiBvdHJhcyBmdW5jaW9uZXMgKG8gInZlcmJvcyIpIGRlIGRwbHlyLiBWZWFtb3MgYWxndW5vcyBtw6FzLgoKIyMgQ3JlYW5kbyBudWV2YXMgdmFyaWFibGVzCgpNdWNoYXMgdmVjZXMgcXVlcnJlbW9zIHRyYWJhamFyIGNvbiBpbmZvcm1hY2nDs24gcXVlIHNlIGRlcml2YSBkZSBsb3MgZGF0b3Mgb3JpZ2luYWxlcy4gRXN0byBzZSBzdWVsZSBoYWNlciBhw7FhZGllbmRvIHVuYSBudWV2YSBjb2x1bW5hLiBMbyBoYWNlbW9zIGNvbiBsYSBmdW5jacOzbiBgbXV0YXRlKClgLgoKUG9kZW1vcyBhw7FhZGlyIHVuYSBudWV2YSB2YXJpYWJsZSAobGxhbWFkYSBgcHJvcGApIHF1ZSByZXByZXNlbnRlIGxhIHByb3BvcmNpw7NuIGRlIHBpbmfDvGlub3MgZW4gY2FkYSAqKmVzcGVjaWUqKiBjb24gZWwgdXNvIGRlIGBtdXRhdGUoKWAuIAoKYGBge3J9CnBpbmd1aW5vcyAlPiUgCiAgZ3JvdXBfYnkoZXNwZWNpZSkgJT4lIAogIHN1bW1hcmlzZShjb3VudCA9IG4oKSwKICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IHJvdW5kKG1lYW4obWFzYV9jb3Jwb3JhbF9nLzEwMDAsIG5hLnJtID0gVFJVRSksIDIpKSAlPiUKICBtdXRhdGUocHJvcCA9IGNvdW50L25yb3cocGluZ3Vpbm9zKSkKCmBgYAoKIyMgRmlsdHJhbmRvIGxvcyBkYXRvcwoKRW4gbnVlc3RybyBpbmZvcm1lIHRhbWJpw6luIHJlYWxpemFtb3MgdW4gZ3LDoWZpY28gcG9yIGVzcGVjaWVzLiBQYXJhIGVsbG8gbmVjZXNpdGFtb3MgbWFudGVuZXIgc8OzbG8gbG9zIGRhdG9zIGRlIGxhIGVzcGVjaWUgcXVlIHF1ZXJlbW9zIGFuYWxpemFyLiAgVXRpbGl6YW1vcyBsYSBmdW5jacOzbiBgZmlsdGVyKClgIHBhcmEgZmlsdHJhciBmaWxhcyBkZSB1biBkYXRhLmZyYW1lLCBlc3RhIGZ1bmNpw7NuIGRldnVlbHZlIHVuIG51ZXZvIGRhdGEuZnJhbWUgY29uIHPDs2xvIGxhcyBmaWxhcyBxdWUgc2F0aXNmYWNlbiBhbGd1bmFzIGNvbmRpY2lvbmVzLgoKUG9kZW1vcyB1dGlsaXphciBvcGVyYWRvcmVzIGzDs2dpY29zIChgPmAsIGA8YCwgYD49YCwgYDw9YCwgYD09YCkgcGFyYSBjcmVhciBjb25kaWNpb25lcyBhIHBhcnRpciBkZSB2YXJpYWJsZXMgbnVtw6lyaWNhcy4gRXN0b3Mgb3BlcmFkb3JlcyB0YW1iacOpbiBzb24gw7p0aWxlcyBwYXJhIGZlY2hhcyB5IGNhZGVuYXMgZGUgdGV4dG8uIEVsIHNpZ3VpZW50ZSBjw7NkaWdvIGFwbGljYSB1bmEgY29uZGljacOzbiAocXVlIHNlYSBpZ3VhbCBhKSBwYXJhIGRhdG9zIGRlIHRpcG8gdGV4dG8gKGxhIGNvbHVtbmEgZXNwZWNpZSkuCgpgYGB7cn0KcGluZ3Vpbm9zICU+JSAKICBmaWx0ZXIoZXNwZWNpZSA9PSAiUGFww7phIikKYGBgCgo+IEFjdGl2aWRhZDogRXNjcmliZSBlbCBjw7NkaWdvIG5lY2VzYXJpbyBwYXJhIGZpbHRyYXIgdG9kb3MgbG9zIHBpbmfDvGlub3MgZGUgbGEgaXNsYSBUb3JnZXJzZW4uCgo+IEFjdGl2aWRhZDogQWhvcmEgZXNjcmliZSBlbCBjw7NkaWdvIHBhcmEgZmlsdHJhciB0b2RvcyBsb3MgcGluZ8O8aW5vcyBjb24gbG9uZ2l0dWQgZGUgYWxldGEgbWF5b3IgYSAyMDAuCgo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIk1hbmlwdWxhbmRvIGRhdG9zIg0Kb3V0cHV0OiANCiAgaHRtbF9kb2N1bWVudDoNCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlDQogICAgdG9jOiB0cnVlDQogICAgdG9jX2Zsb2F0OiBmYWxzZQ0KICAgIGhpZ2hsaWdodDogdGFuZ28NCi0tLQ0KDQpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0NCmtuaXRyOjpvcHRzX2NodW5rJHNldCgNCgllY2hvID0gVFJVRSwNCgltZXNzYWdlID0gRkFMU0UsDQoJd2FybmluZyA9IEZBTFNFDQopDQoNCmxpYnJhcnkodGlkeXZlcnNlKQ0KcGluZ3Vpbm9zIDwtIHJlYWRfY3N2KCJkYXRvcy9waW5ndWlub3MuY3N2IikNCmBgYA0KDQojIyBDcmVhbmRvIHRhYmxhcyBkZSByZXN1bWVuDQoNCkVuIHVuYSBob2phIGRlIGPDoWxjdWxvLCBsYXMgdGFibGFzIGRpbsOhbWljYXMgbyBwaXZvdCB0YWJsZXMgc29uIHBvdGVudGVzIGhlcnJhbWllbnRhcyBwYXJhIHJlc3VtaXIgbG9zIGRhdG9zIGRlIGRpZmVyZW50ZXMgbWFuZXJhcy4gUG9kZW1vcyBjcmVhciBlc3RhcyB0YWJsYXMgdXRpbGl6YW5kbyBsYXMgZnVuY2lvbmVzIGBncm91cF9ieWAgeSBgc3VtbWFyaXplYCBkZWwgcGFxdWV0ZSBkcGx5ci4gDQoNCkVjaGVtb3MgdW4gdmlzdGF6byBhIG51ZXN0cm8gaW5mb3JtZSwganVzdG8gZGVzcHXDqXMgZGUgbGVlciBsb3MgZGF0b3MsIGNyZWFtb3MgdW5hIHRhYmxhIGRlIHJlc3VtZW4gY29uIGVsIG7Dum1lcm8gZGUgY2Fzb3MgeSBsYSBtYXNhIGNvcnBvcmFsIG1lZGlhIGRlIGNhZGEgZXNwZWNpZSBkZSBudWVzdHJvIGNvbmp1bnRvIGRlIGRhdG9zLg0KDQpQb2RlbW9zIHV0aWxpemFyIGBncm91cF9ieSgpYCBwYXJhIGFncnVwYXIgbnVlc3Ryb3MgZGF0b3MgcG9yICoqZXNwZWNpZSoqIHkgYHN1bW1hcml6ZSgpYCBwYXJhIGNhbGN1bGFyIGVsIG7Dum1lcm8gZGUgY2Fzb3MgeSBsYSAqKm1hc2FfY29ycG9yYWxfZyoqIG1lZGlhIHBhcmEgY2FkYSBncnVwby4NCg0KYGBge3J9DQoNCnBpbmd1aW5vcyAlPiUgDQogIGdyb3VwX2J5KGVzcGVjaWUpICU+JSANCiAgc3VtbWFyaXNlKGNvdW50ID0gbigpLA0KICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IG1lYW4obWFzYV9jb3Jwb3JhbF9nLCBuYS5ybSA9IFRSVUUpKQ0KDQpgYGANCg0KTGEgZnVuY2nDs24gYG4oKWAgZGV2dWVsdmUgZWwgbsO6bWVybyBkZSBjYXNvcyB5IGxhIGZ1bmNpw7NuIGBtZWFuYCBjYWxjdWxhIGxhIG1lZGlhIG8gcHJvbWVkaW8uIEVsIHBhcsOhbWV0cm8gYG5hLnJtID0gVFJVRWAgaW5kaWNhIGEgbGEgZnVuY2nDs24gcXVlIGVsaW1pbmUgbG9zIHZhbG9yZXMgZmFsdGFudGVzIChgTkFgKSBhbnRlcyBkZSByZWFsaXphciBlbCBjw6FsY3Vsby4NCg0KPiBQcmVndW50YTogwr9RdcOpIHBhc2Egc2kgbm8gc2UgdXRpbGl6YSBgZ3JvdXBfYnkoKWAgYW50ZXMgZGUgYHN1bW1hcmlzZSgpYD8gUHJvYsOpbW9zbG8geSBkaXNjdXRhbW9zIGxvIHF1ZSBvY3VycmUuDQoNCmBgYHtyfQ0KcGluZ3Vpbm9zICU+JSANCiAgc3VtbWFyaXNlKGNvdW50ID0gbigpLA0KICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IG1lYW4obWFzYV9jb3Jwb3JhbF9nLCBuYS5ybSA9IFRSVUUpKQ0KYGBgDQoNCkFzw60gcXVlIHNpIG5vIGFncnVwYW1vcyBwb3IgbGEgZXNwZWNpZSBwcmltZXJvLCBvYnRlbmRyZW1vcyB1bmEgc29sYSBlc3RhZMOtc3RpY2EgZGUgcmVzdW1lbiAobiB5IG1lZGlhIGVuIGVzdGUgY2FzbykgcGFyYSB0b2RvIGVsIGNvbmp1bnRvIGRlIGRhdG9zLg0KDQpBaG9yYSwgcXVlcmVtb3MgbGEgbWVkaWEgZGUgbGEgbWFzYSBjb3Jwb3JhbCBlbiBraWxvZ3JhbW9zIHkgY29uIGRvcyBkZWNpbWFsZXMuIFBvZGVtb3MgY2FtYmlhciBudWVzdHJhIGxsYW1hZGEgYSBgc3VtbWFyaXNlKClgIHBhcmEgb2J0ZW5lciBlc2UgY8OhbGN1bG8uICANCg0KYGBge3J9DQpwaW5ndWlub3MgJT4lIA0KICBncm91cF9ieShlc3BlY2llKSAlPiUgDQogIHN1bW1hcmlzZShjb3VudCA9IG4oKSwNCiAgICAgICAgICAgIG1hc2FfY29ycG9yYWxfbWVkaWEgPSByb3VuZChtZWFuKG1hc2FfY29ycG9yYWxfZy8xMDAwLCBuYS5ybSA9IFRSVUUpLCAyKSkNCmBgYA0KDQpQcmltZXJvIGRpdmlkaW1vcyBsYSBtYXNhIGNvcnBvcmFsIHBvciAxMDAwIHBhcmEgdHJhbnNmb3JtYXJsYSBkZSBncmFtb3MgYSBraWxvZ3JhbW9zIHkgbHVlZ28gdXRpbGl6YW1vcyBsYSBmdW5jacOzbiBgcm91bmQoKWAgcGFyYSByZWRvbmRlYXIgYSBzw7NsbyBkb3MgZGVjaW1hbGVzLg0KDQpBaG9yYSBlc3RhbW9zIGVuIGVsIHB1bnRvIGVuIGVsIHF1ZSBxdWVyZW1vcyBndWFyZGFyIGVzdGEgaW5mb3JtYWNpw7NuIHJlc3VtaWRhIGNvbW8gdW5hIHZhcmlhYmxlIHBhcmEgcG9kZXIgdXRpbGl6YXJsYSBlbiBwb3N0ZXJpb3JlcyBhbsOhbGlzaXMgeSBmb3JtYXRvcy4NCg0KQXPDrSBxdWUgdmFtb3MgYSBhw7FhZGlyIHVuYSBhc2lnbmFjacOzbiBkZSB2YXJpYWJsZSBhIGVzYSBwcmltZXJhIGzDrW5lYToNCg0KYGBge3J9DQpyZXN1bWVuIDwtIHBpbmd1aW5vcyAlPiUgDQogIGdyb3VwX2J5KGVzcGVjaWUpICU+JSANCiAgc3VtbWFyaXNlKGNvdW50ID0gbigpLA0KICAgICAgICAgICAgbWFzYV9jb3Jwb3JhbF9tZWRpYSA9IHJvdW5kKG1lYW4obWFzYV9jb3Jwb3JhbF9nLzEwMDAsIG5hLnJtID0gVFJVRSksIDIpKQ0KYGBgDQoNCiMjIETDoW5kb2xlIGZvcm1hdG8gYSBsYSB0YWJsYQ0KDQpQYXJhIHF1ZSBudWVzdHJhIHRhYmxhIHNlIHZlYSBtZWpvciBlbiB1biBpbmZvcm1lLCB0ZW5lbW9zIHF1ZSBjYW1iaWFyIGFsZ3Vub3MgZGUgc3VzIGVsZW1lbnRvcy4gUG9yIGVqZW1wbG8sIGVsIG5vbWJyZSBkZSBsYXMgdmFyaWFibGVzIGRlYmUgc2VyIGluZm9ybWF0aXZvIHBhcmEgdW5hIHBlcnNvbmEgKGRlIG1vbWVudG8gc29uIG5vbWJyZXMgw7p0aWxlcyBwYXJhIHVuYSBjb21wdXRhZG9yYSksIHkgcG9kZW1vcyBhw7FhZGlybGUgdW4gdMOtdHVsbyB5IGNhbWJpYXIgbGEgYWxpbmVhY2nDs24gZGUgbG9zIG7Dum1lcm9zLg0KDQpQb2RlbW9zIGhhY2VybG8gY29uIGxhIGZ1bmNpw7NuIGBrYWJsZWAuDQoNCmBgYHtyfQ0KcmVzdW1lbiAlPiUgDQogIGtuaXRyOjprYWJsZShjb2wubmFtZXMgPSBjKCJFc3BlY2llIiwgIkNhbnRpZGFkIiwgIk1hc2EgY29ycG9yYWwgbWVkaWEiKSwNCiAgICAgICAgICAgICAgIGFsaWduID0gImxjYyIsDQogICAgICAgICAgICAgICBjYXB0aW9uID0gIlJlc3VtZW4gZGUgbG9zIHBpbmfDvGlub3MgZW4gZWwgZGF0YXNldCBwb3IgZXNwZWNpZS4iKQ0KYGBgDQoNClBvZGVtb3MgaGFjZXIgbXVjaG8gbcOhcyBjb24gb3RyYXMgZnVuY2lvbmVzIChvICJ2ZXJib3MiKSBkZSBkcGx5ci4gVmVhbW9zIGFsZ3Vub3MgbcOhcy4NCg0KIyMgQ3JlYW5kbyBudWV2YXMgdmFyaWFibGVzDQoNCk11Y2hhcyB2ZWNlcyBxdWVycmVtb3MgdHJhYmFqYXIgY29uIGluZm9ybWFjacOzbiBxdWUgc2UgZGVyaXZhIGRlIGxvcyBkYXRvcyBvcmlnaW5hbGVzLiBFc3RvIHNlIHN1ZWxlIGhhY2VyIGHDsWFkaWVuZG8gdW5hIG51ZXZhIGNvbHVtbmEuIExvIGhhY2Vtb3MgY29uIGxhIGZ1bmNpw7NuIGBtdXRhdGUoKWAuDQoNClBvZGVtb3MgYcOxYWRpciB1bmEgbnVldmEgdmFyaWFibGUgKGxsYW1hZGEgYHByb3BgKSBxdWUgcmVwcmVzZW50ZSBsYSBwcm9wb3JjacOzbiBkZSBwaW5nw7xpbm9zIGVuIGNhZGEgKiplc3BlY2llKiogY29uIGVsIHVzbyBkZSBgbXV0YXRlKClgLiANCg0KYGBge3J9DQpwaW5ndWlub3MgJT4lIA0KICBncm91cF9ieShlc3BlY2llKSAlPiUgDQogIHN1bW1hcmlzZShjb3VudCA9IG4oKSwNCiAgICAgICAgICAgIG1hc2FfY29ycG9yYWxfbWVkaWEgPSByb3VuZChtZWFuKG1hc2FfY29ycG9yYWxfZy8xMDAwLCBuYS5ybSA9IFRSVUUpLCAyKSkgJT4lDQogIG11dGF0ZShwcm9wID0gY291bnQvbnJvdyhwaW5ndWlub3MpKQ0KDQpgYGANCg0KIyMgRmlsdHJhbmRvIGxvcyBkYXRvcw0KDQpFbiBudWVzdHJvIGluZm9ybWUgdGFtYmnDqW4gcmVhbGl6YW1vcyB1biBncsOhZmljbyBwb3IgZXNwZWNpZXMuIFBhcmEgZWxsbyBuZWNlc2l0YW1vcyBtYW50ZW5lciBzw7NsbyBsb3MgZGF0b3MgZGUgbGEgZXNwZWNpZSBxdWUgcXVlcmVtb3MgYW5hbGl6YXIuICBVdGlsaXphbW9zIGxhIGZ1bmNpw7NuIGBmaWx0ZXIoKWAgcGFyYSBmaWx0cmFyIGZpbGFzIGRlIHVuIGRhdGEuZnJhbWUsIGVzdGEgZnVuY2nDs24gZGV2dWVsdmUgdW4gbnVldm8gZGF0YS5mcmFtZSBjb24gc8OzbG8gbGFzIGZpbGFzIHF1ZSBzYXRpc2ZhY2VuIGFsZ3VuYXMgY29uZGljaW9uZXMuDQoNClBvZGVtb3MgdXRpbGl6YXIgb3BlcmFkb3JlcyBsw7NnaWNvcyAoYD5gLCBgPGAsIGA+PWAsIGA8PWAsIGA9PWApIHBhcmEgY3JlYXIgY29uZGljaW9uZXMgYSBwYXJ0aXIgZGUgdmFyaWFibGVzIG51bcOpcmljYXMuIEVzdG9zIG9wZXJhZG9yZXMgdGFtYmnDqW4gc29uIMO6dGlsZXMgcGFyYSBmZWNoYXMgeSBjYWRlbmFzIGRlIHRleHRvLiBFbCBzaWd1aWVudGUgY8OzZGlnbyBhcGxpY2EgdW5hIGNvbmRpY2nDs24gKHF1ZSBzZWEgaWd1YWwgYSkgcGFyYSBkYXRvcyBkZSB0aXBvIHRleHRvIChsYSBjb2x1bW5hIGVzcGVjaWUpLg0KDQpgYGB7cn0NCnBpbmd1aW5vcyAlPiUgDQogIGZpbHRlcihlc3BlY2llID09ICJQYXDDumEiKQ0KYGBgDQoNCj4gQWN0aXZpZGFkOiBFc2NyaWJlIGVsIGPDs2RpZ28gbmVjZXNhcmlvIHBhcmEgZmlsdHJhciB0b2RvcyBsb3MgcGluZ8O8aW5vcyBkZSBsYSBpc2xhIFRvcmdlcnNlbi4NCg0KPiBBY3RpdmlkYWQ6IEFob3JhIGVzY3JpYmUgZWwgY8OzZGlnbyBwYXJhIGZpbHRyYXIgdG9kb3MgbG9zIHBpbmfDvGlub3MgY29uIGxvbmdpdHVkIGRlIGFsZXRhIG1heW9yIGEgMjAwLg0KDQo=</div>
 
 
 
