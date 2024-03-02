@@ -30,7 +30,7 @@ Para iniciar RStudio, hacé doble click en el ícono de RStudio. Iniciar  RStudi
 Observa los paneles por defecto:
 
   * Consola (toda la izquierda)
-  * Environment/History (pestaña en la parte superior derech)
+  * Environment/History (pestaña en la parte superior derecha)
   * Files/Plots/Packages/Help (con pestañas en la parte inferior derecha)
 
 No es necesario que sepamos utilizar todo esto de inmediato. Nos familiarizaremos con más opciones y capacidades a lo largo del taller.
